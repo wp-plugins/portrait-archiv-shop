@@ -1,0 +1,53 @@
+=== Portrait-Archiv.com Photostore ===
+Contributors: Thomas Schiffler
+Tags: Portrait-Archiv, Store, Onlineshop, Shop, Foto, Bild
+Donate link: http://www.Portrait-Service.com
+Requires at least: 3.0.1
+Tested up to: 3.6
+Stable tag: 1.0
+License: GPLv2 or later
+License URI: http://www.gnu.org/licenses/gpl-2.0.html
+
+Der Portrait-Archiv.com Photostore stellt dem Benutzer die Moeglichkeit zur einfachen Integration eines Online Foto Nachbestellsystems zur Verfuegung
+
+== Description ==
+Das Portrait-Archiv ist ein Angebot der Firma Portrait-Service. 
+Mit Hilfe von Portrait-Archiv.com haben Sie die Möglichkeit, Ihre Bilder einfach und unkompliziert online zum Verkauf anzubieten. Hierbei genügt es Ihre Bilder in Ihrem Online Archiv zu veröffentlichen und die gewünschten Verkaufspreise  der einzelnen Artikel anzugeben. Egal ob Photoabzug, Poster, digitaler Download ... fast alles ist möglich. Die gesamte Abwicklung, von der Bestellannahme über den Zahlungseingang bis zur Produktion und Auslieferung übernimmt hierbei Portrait-Archiv.com für Sie. Pünktlich zum Monatsanfang erhalten Sie Ihre detaillierte Provisionsabrechnung und die Überweisung der angefallenen Provisionen auf Ihr angegebenes Konto.
+
+Mit Hilfe dieses Modules haben Sie die Möglichkeit Ihre bei Portrait-Archiv.com veröffentlichten Onlinegalerien einfach und unkompliziert in Ihre bestehende Wordpress-Seite zu integrieren. 
+
+Folgende Funktionen stehen Ihnen derzeit zur Verfügung:
+* Anzeige einzelner Galerien (mit oder ohne individuellem Gästekennwort)
+* Anzeige einer Liste von Galerien (mit oder ohne individuellem Gästekennwort)
+* Eingabe eines Gästekennwortes mit Anzeige der jeweilig gültigen Galerie
+* Bestellfunktion der Bilder mit automatischer Übertragung zu Portrait-Archiv.com
+
+Weitere Informationen zur Benutzung des Online Foto Nachbestellsystems 'Portrait-Archiv.com' finden Sie auf unserer Informationsseite unter folgendem Link:
+http://www.portrait-service.com/portrait-archiv
+
+== Installation ==
+1. Plugin herunterladen, entpacken und Plugin-Ordner 'portrait-archiv-shop' per FTP nach wp-content/plugins übertragen
+2. Plugin im Menü "Plugins" im Wordpress-Adminbereich aktivieren
+3. Konfiguration unter Menüpunkt "Portrait-Archiv.com > Grundeinstellungen" vornehmen
+4. gewünschten Tag in Seite einfügen
+
+Weitere Informationen entnehmen Sie bitte dem Menüpunkt "Portrait-Archiv.com > Anleitung" nach Installation des Plugins
+
+== Frequently Asked Questions ==
+= Kann ich das Plugin auch ausserhalb Deutschlands nutzen? =
+Ja, prinzipiell ist die Nutzung des Modules auch ausserhalb Deutschlands möglich. Bitte beachten Sie hierbei allerdings dass 
+einige Labore die Lieferung von Fotoabzügen, Postern oder Leinwänden nur innerhalb Deutschlands anbieten. 
+Der Verkauf von digitalen Bildprodukten ist selbstverständlich weltweit möglich.
+
+== Screenshots ==
+1. The screenshot description corresponds to screenshot-1.(png|jpg|jpeg|gif).
+2. The screenshot description corresponds to screenshot-2.(png|jpg|jpeg|gif).
+3. The screenshot description corresponds to screenshot-3.(png|jpg|jpeg|gif).
+
+== Changelog ==
+= 0.1 =
+* erste initiale Veröffentlichung
+
+== Upgrade Notice ==
+= 0.1 =
+* erste initiale Veröffentlichung
