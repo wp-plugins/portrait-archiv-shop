@@ -40,12 +40,14 @@ einige Labore die Lieferung von Fotoabzügen, Postern oder Leinwänden nur inner
 Der Verkauf von digitalen Bildprodukten ist selbstverständlich weltweit möglich.
 
 == Screenshots ==
-1. The screenshot description corresponds to screenshot-1.(png|jpg|jpeg|gif).
-2. The screenshot description corresponds to screenshot-2.(png|jpg|jpeg|gif).
-3. The screenshot description corresponds to screenshot-3.(png|jpg|jpeg|gif).
+1. Anzeige aller Galerien im Admin-Bereich
+2. Entscheiden Sie, wie Sie Ihre Galerie veröffentlichen möchten
+3. Anzeige einer Galerie auf Ihrer Internetseite
+4. Der Warenkorb
+5. Eingegangene Bestellungen werden zur Kontrolle in Ihrem Adminbereich angezeigt
 
 == Changelog ==
-= 0.1 =
+= 1.0 =
 * erste initiale Veröffentlichung
 
 == Upgrade Notice ==
