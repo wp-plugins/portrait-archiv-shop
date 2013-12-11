@@ -13,13 +13,23 @@
 			<?php
 				if (isset($warenkorb) && ($warenkorb->getAnzahl() > 0)) {
 					?>
-						<a href='<?php echo add_query_arg ('pawps_showWarenkorb', 1); ?>' title='Warenkorb anzeigen'>Warenkorb</a><br/>
+					<table border="0">
+						<tr valign="top">
+							<td colspan="2"><a href='<?php echo add_query_arg ('pawps_showWarenkorb', 1); ?>' title='Warenkorb anzeigen'>Warenkorb</a><br/></td>
+						</tr>
+						<tr>
+							<td>Artikel:</td>
+							<td><?php echo $warenkorb->getAnzahl(); ?></td>
+						</tr>
+						<tr>
+							<td>Summe:</td>
+							<td><?php echo $warenkorb->getZwischensumme(); ?> EUR</td>
+						</tr>
+					</table>
 					<?php
-					echo $warenkorb->getAnzahl() . " Artikel<br/>";
-					echo $warenkorb->getZwischensumme() . " EUR<br/>";
 				} else {
 					echo "&nbsp;";
-				}
+				}			
 			?>
 		</td>
 	</tr>

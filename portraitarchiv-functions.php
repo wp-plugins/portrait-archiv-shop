@@ -419,10 +419,10 @@
  function pawps_isFieldValid($field) {
  	return isset($field) && (strlen($field) > 0);
  }
- 
+  
  function pawps_validateField($field, $fieldName) {
  	if (!pawps_isFieldValid($field)) {
- 		return "Der eingegebene Wert im Feld '" . $fieldName . "' ist ungÃ¼ltig<br/>";
+ 		return "Der eingegebene Wert im Feld '" . $fieldName . "' ist ungütig<br/>";
  	}
  	
  	return "";

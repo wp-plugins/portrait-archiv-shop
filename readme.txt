@@ -4,7 +4,7 @@ Tags: Portrait-Archiv, Store, Onlineshop, Shop, Foto, Bild
 Donate link: http://www.Portrait-Service.com
 Requires at least: 3.0.1
 Tested up to: 3.6
-Stable tag: 1.0
+Stable tag: 1.0.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -47,9 +47,13 @@ Der Verkauf von digitalen Bildprodukten ist selbstverständlich weltweit möglic
 5. Eingegangene Bestellungen werden zur Kontrolle in Ihrem Adminbereich angezeigt
 
 == Changelog ==
+= 1.0.1 =
+* kleine Anpassungen im Default-Template
+* Erweiterung der Readme zur Anzeige der Bilder im Pluginverzeichnis
+
 = 1.0 =
 * erste initiale Veröffentlichung
 
 == Upgrade Notice ==
-= 0.1 =
+= 1.0 =
 * erste initiale Veröffentlichung
