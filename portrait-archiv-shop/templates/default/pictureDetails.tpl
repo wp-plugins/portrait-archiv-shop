@@ -1,4 +1,4 @@
- 	<table class="pawps_table">
+ 	<table width="450px" align="center">
 		<tr>
 			<td align="left" width="25%">
 				<?php if (!$image->isFirst()) { ?>
@@ -16,13 +16,12 @@
 		</tr>
 	</table>
 	<center>
-		<div class="pawps_detailImageArea">
-			<img src="<?php echo $image->getDetailUrl(); ?>" class="pawps_image" />
-		</div>
+		<img src="<?php echo $image->getDetailUrl(); ?>" class="pawps_image" />
+
 		<form name="warenkorbForm" method="post" action="">
 			<input type="hidden" name="imageId" value="<?php echo $image->id; ?>" />
 			<input type="hidden" name="preislistId" value="<?php echo $shooting->pricelist_id; ?>" />
-			<table border="0" width="100%">
+			<table border="0">
 				<tr>
 					<td>
 						<select name="product">

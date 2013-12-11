@@ -37,7 +37,7 @@
  	
  	$content =  file_get_contents($url);
  	
- 	pawps_doDebug ("Result: " . $result);
+ 	pawps_doDebug ("Result: " . $content);
  	
  	return $content;
  }

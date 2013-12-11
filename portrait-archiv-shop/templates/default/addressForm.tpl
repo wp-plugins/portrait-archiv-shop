@@ -3,8 +3,7 @@
 					<tr>
 						<td>Name, Vorname:</td>
 						<td>
-							<input type="text" name="lastname" size="20" maxlength="25" value="<?php echo $name; ?>" />,
-							<input type="text" name="firstname" size="20" maxlength="25" value="<?php echo $firstname; ?>" />
+							<input type="text" name="lastname" size="20" maxlength="25" value="<?php echo $name; ?>" />, <input type="text" name="firstname" size="20" maxlength="25" value="<?php echo $firstname; ?>" />
 						</td>
 					</tr>
 					<tr>
@@ -16,8 +15,7 @@
 					<tr>
 						<td>Plz, Ort:</td>
 						<td>
-							<input type="text" name="plz" size="6" maxlength="6" value="<?php echo $plz; ?>" />
-							<input type="text" name="ort" size="30" maxlength="40" value="<?php echo $city; ?>" />
+							<input type="text" name="plz" size="6" maxlength="6" value="<?php echo $plz; ?>" /> <input type="text" name="ort" size="30" maxlength="40" value="<?php echo $city; ?>" />
 						</td>
 					</tr>
 					<tr>
