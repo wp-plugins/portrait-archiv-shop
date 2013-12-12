@@ -686,5 +686,9 @@
  		}
  	}
  }
+ 
+ class pawps_newFotograf {
+ 	var $firma, $name, $vorname, $strasse, $nr, $plz, $ort, $telefon, $email, $homepage, $wpUrl;
+ }
 
 ?>
