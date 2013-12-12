@@ -422,7 +422,7 @@
   
  function pawps_validateField($field, $fieldName) {
  	if (!pawps_isFieldValid($field)) {
- 		return "Der eingegebene Wert im Feld '" . $fieldName . "' ist ungütig<br/>";
+ 		return "Der eingegebene Wert im Feld '" . $fieldName . "' ist ungültig<br/>";
  	}
  	
  	return "";
@@ -432,6 +432,52 @@
  	if (get_option(PAWPS_DEBUG) == 1) {
  		echo $debugMessage . "<br />";
  	}
+ }
+ 
+ function pawps_is_email(&$address_to_validate, $strict = false) {
+ 	//Leading and following whitespaces are ignored
+ 	$address_to_validate = trim($address_to_validate);
+ 	//Email-address is set to lower case
+ 	$address_to_validate = strtolower($address_to_validate);
+ 
+ 	//List of signs which are illegal in name, subdomain and domain
+ 	$illegal_string = '\\\\(\\n)@';
+ 
+ 	//Parts of the regular expression = name@subdomain.domain.toplevel
+ 	$name      = '([^\\.'.$illegal_string.'][^'.$illegal_string.']?)+';
+ 	$subdomain = '([^\\._'.$illegal_string.']+\\.)?';
+ 	$domain    = '[^\\.\\-_'.$illegal_string.'][^\\._'.$illegal_string.']*[^\\.\\-_'.$illegal_string.']';
+ 	$toplevel  = '([a-z]{2,4}|museum|travel)';    //.museum and .travel are the only TLDs longer than four signs
+ 
+ 	$regular_expression = '/^'.$name.'[@]'.$subdomain.$domain.'\.'.$toplevel.'$/';
+ 
+ 	return preg_match($regular_expression, $address_to_validate) ? true : false;
+ }
+ 
+ function pawps_is_url($url) {
+ 	// SCHEME
+ 	$urlregex = "^(https?|ftp)\:\/\/";
+ 
+ 	// USER AND PASS (optional)
+ 	$urlregex .= "([a-z0-9+!*(),;?&=\$_.-]+(\:[a-z0-9+!*(),;?&=\$_.-]+)?@)?";
+ 
+ 	// HOSTNAME OR IP
+ 	$urlregex .= "[a-z0-9+\$_-]+(\.[a-z0-9+\$_-]+)*";  // http://x = allowed (ex. http://localhost, http://routerlogin)
+ 	//$urlregex .= "[a-z0-9+\$_-]+(\.[a-z0-9+\$_-]+)+";  // http://x.x = minimum
+ 	//$urlregex .= "([a-z0-9+\$_-]+\.)*[a-z0-9+\$_-]{2,3}";  // http://x.xx(x) = minimum
+ 	//use only one of the above
+ 
+ 	// PORT (optional)
+ 	$urlregex .= "(\:[0-9]{2,5})?";
+ 	// PATH  (optional)
+ 	$urlregex .= "(\/([a-z0-9+\$_-]\.?)+)*\/?";
+ 	// GET Query (optional)
+ 	$urlregex .= "(\?[a-z+&\$_.-][a-z0-9;:@/&%=+\$_.-]*)?";
+ 	// ANCHOR (optional)
+ 	$urlregex .= "(#[a-z_.-][a-z0-9+\$_.-]*)?\$";
+ 
+ 	// check
+ 	if (eregi($urlregex, $url)) {return true; } else {return false; }
  }
  
  // Methode um taegliche Aktualisierung durchzufuehren

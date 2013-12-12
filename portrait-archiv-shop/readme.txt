@@ -4,7 +4,7 @@ Tags: Portrait-Archiv, Store, Onlineshop, Shop, Foto, Bild
 Donate link: http://www.Portrait-Service.com
 Requires at least: 3.0.1
 Tested up to: 3.8
-Stable tag: 1.0.1
+Stable tag: 1.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -38,6 +38,7 @@ Weitere Informationen entnehmen Sie bitte dem Menüpunkt "Portrait-Archiv.com > 
 Ja, prinzipiell ist die Nutzung des Modules auch ausserhalb Deutschlands möglich. Bitte beachten Sie hierbei allerdings dass 
 einige Labore die Lieferung von Fotoabzügen, Postern oder Leinwänden nur innerhalb Deutschlands anbieten. 
 Der Verkauf von digitalen Bildprodukten ist selbstverständlich weltweit möglich.
+Zur Anmeldung eines Portrait-Archiv.com Accounts aus dem Ausland kontaktieren Sie uns bitte über Portrait-Service.com
 
 = Wie veröffentliche ich Galerien? =
 Das Plugin zeigt Ihnen alle unter Ihrem Benutzeraccount auf Portrait-Archiv.com veröffentlichten Galerien an. Um eine neue Galerie
@@ -58,6 +59,10 @@ Menüpunkt 'Galerien'.
 5. Eingegangene Bestellungen werden zur Kontrolle in Ihrem Adminbereich angezeigt
 
 == Changelog ==
+= 1.1 =
+* kleine Performanceoptimierungen
+* Eröffnung eines Portrait-Archiv.com Accounts direkt über das Modul
+
 = 1.0.1 =
 * kleine Anpassungen im Default-Template
 * Erweiterung der Readme zur Anzeige der Bilder im Pluginverzeichnis
