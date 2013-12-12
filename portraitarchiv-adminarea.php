@@ -17,7 +17,16 @@
 		'pawps_admin_menu_anleitung',
 		'pawps_admin_menu_anleitung');
 	
-	
+	if (!pawps_isConnectionWorking() && pawps_isAnmeldeWsEnabled()) {
+		add_submenu_page(
+			'pawps_admin_menu_mainpage',
+			'Portrait-Archiv.com Anmeldung',
+			'Anmeldung',
+			'manage_options',
+			'pawps_admin_menu_anmeldung',
+			'pawps_admin_menu_anmeldung');
+	}
+		
 	add_submenu_page(
 		'pawps_admin_menu_mainpage',
 		'Portrait-Archiv.com Grundeinstellungen',
@@ -57,6 +66,144 @@
  		 		<h2><img src="<?php echo plugins_url( 'portrait-archiv-shop/resources/logo.png' ); ?>" /> Portrait-Archiv.com<?php if (isset($title)) echo " > " . $title; ?></h2>
  		 	</div>
  	<?php 	
+ }
+ 
+ function pawps_admin_menu_anmeldung() {
+	pawps_showAdminHeader("Eröffnung eines neuen Portrait-Archives");
+		
+	if ( !current_user_can( 'manage_options' ) )  {
+		wp_die( __( 'Ihre aktuelle Berechtigung verhindert den Zugriff auf diese Seite' ) );
+	}
+	
+	?>
+	
+		<div class="wrap">
+			<h3>Anmeldeinformationen</h3>
+			Um das Plugin nutzen zu können benötigen Sie einen kostenlosen Account bei Portrait-Archiv.com. Hier veröffentlichen Sie 
+			Ihre Galerien welche über das Plugin in Ihre Seite intergriert werden.<br/><br/>
+			Ihnen gefällt unser Portrait-Archiv und Sie möchten Ihren Kunden gerne diesen Onlineservice anbieten?<br/>
+			Eröffnen Sie noch heute Ihr eigenes Online Portraitstudio – ganz unverbindlich und ohne Risiko und laufende Kosten. Wenn Sie 
+			keine Umsatzsteigerung durch den Einsatz des Portrait-Archiv haben dann kostet Sie dies selbstverständlich keinen Cent.<br/>
+			<br/>
+			Füllen Sie einfach das nachstehende Formular vollständig aus und wir werden Ihnen in kürze Ihre Zugangsdaten sowie weitere 
+			Informationen per Mail zukommen lassen. Bitte beachten Sie dass sämtliche Vertragsschlüsse unseren 
+			<a href="http://www.portrait-service.com/portrait-archiv/allgemeine-geschaftsbestimmungen/" target="_blank">Allgemeinen 
+			Geschäftsbedingungen</a> unterliegen.
+			
+			<?php
+
+			if (isset($_POST['anmeldungDurchfuehren'])) {
+				// Form abgesendet -> Anmeldung durchführen
+				$error = pawps_validateField($_POST['paName'], "Name");
+				$error .= pawps_validateField($_POST['paVorname'], "Vorname");
+				$error .= pawps_validateField($_POST['paStrasse'], "Strasse");
+				$error .= pawps_validateField($_POST['paHausnummer'], "Hausnummer");
+				$error .= pawps_validateField($_POST['paPlz'], "Plz");
+				$error .= pawps_validateField($_POST['paOrt'], "Ort");
+				$error .= pawps_validateField($_POST['paMail'], "E-Mail");
+				$error .= pawps_validateField($_POST['paUrl'], "Homepage-URL");			
+				
+				if (strlen($error) == 0) {
+					// Maske prinzipiell OK -> detaillierte Validierungen durchführen
+					if (!pawps_is_email($_POST['paMail'])) {
+						$error .= "Bitte geben Sie eine gültige E-Mail-Adresse an<br/>";
+					}
+					
+					if (!pawps_is_url($_POST['paUrl'])) {
+						$error .= "Bitte geben Sie eine gültige URL an<br/>";
+					}
+					
+					if ($_POST['paAgb'] != "1") {
+						$error .= "Bitte aktzeptieren Sie unsere AGB<br/>";
+					}
+				}				
+				
+				// Validierungen abgeschlossen
+				if (strlen($error) == 0) {
+					// Input-Objekt befüllen
+					$anmeldedaten = new pawps_newFotograf();
+					$anmeldedaten->firma = urlencode($_POST['paFirma']);
+					$anmeldedaten->name = urlencode($_POST['paName']);
+					$anmeldedaten->vorname = urlencode($_POST['paVorname']);
+					$anmeldedaten->strasse = urlencode($_POST['paStrasse']);
+					$anmeldedaten->nr = urlencode($_POST['paHausnummer']);
+					$anmeldedaten->plz = urlencode($_POST['paPlz']);
+					$anmeldedaten->ort = urlencode($_POST['paOrt']);
+					$anmeldedaten->telefon = urlencode($_POST['paPhone']);
+					$anmeldedaten->email = urlencode($_POST['paMail']);
+					$anmeldedaten->homepage = urlencode($_POST['paUrl']);
+					$anmeldedaten->wpUrl = urlencode(site_url());
+					
+					$message = pawps_doAnmeldung($anmeldedaten);
+				}
+			}
+			
+			?>
+			
+			<h3>Anmeldung durchführen</h3>
+			<?php pawps_displayError($error, $message); ?>
+			<?php 
+				if (isset($message) && ("Ihr Account wurde erfolgreich angelegt, die Mail mit den Zugangsdaten ist bereits auf dem Weg." == $message)) {
+				} else {
+			?>
+ 			<form name="anmeldeForm" method="post" action="">
+				<table class="wp-list-table widefat fixed pages" cellspacing="0">
+					<tr>
+						<td width="150px">Firma:</td>
+						<td><input type="text" name="paFirma" value="<?php echo $_POST['paFirma']; ?>" size="25" maxlength="50" ></td>
+					</tr>
+					<tr>
+						<td>Name, Vorname:</td>
+						<td>
+							<input type="text" name="paName" value="<?php echo $_POST['paName']; ?>" size="25" maxlength="25">,
+							<input type="text" name="paVorname" value="<?php echo $_POST['paVorname']; ?>" size="25" maxlength="25">
+						</td>
+					</tr>
+					<tr>
+						<td>Strasse, Nr:</td>
+						<td>
+							<input type="text" name="paStrasse" value="<?php echo $_POST['paStrasse']; ?>" size="40" maxlength="40">,
+							<input type="text" name="paHausnummer" value="<?php echo $_POST['paHausnummer']; ?>" size="6" maxlength="6">
+						</td>
+					</tr>
+					<tr>
+						<td>Plz, Ort:</td>
+						<td>
+							<input type="text" name="paPlz" value="<?php echo $_POST['paPlz']; ?>" size="6" maxlength="6">
+							<input type="text" name="paOrt" value="<?php echo $_POST['paOrt']; ?>" size="40" maxlength="40">
+						</td>
+					</tr>
+					<tr>
+						<td>Land:</td>
+						<td>Deutschland</td>
+					</tr>
+					<tr>
+						<td>Telefon:</td>
+						<td><input type="text" name="paPhone" value="<?php echo $_POST['paPhone']; ?>" size="40" maxlength="50" ></td>
+					</tr>
+					<tr>
+						<td>E-Mail:</td>
+						<td><input type="text" name="paMail" value="<?php echo $_POST['paMail']; ?>" size="40" maxlength="50" ></td>
+					</tr>
+					<tr>
+						<td>URL zur Homepage:</td>
+						<td><input type="text" name="paUrl" value="<?php echo $_POST['paUrl']; ?>" size="40" maxlength="50" ></td>
+					</tr>
+					<tr>
+						<td colspan="2">
+							<a href="http://www.portrait-service.com/portrait-archiv/allgemeine-geschaftsbestimmungen/" target="_blank">AGB gelesen 
+							und aktzeptiert</a> <input type="checkbox" name="paAgb" value="1"/>
+						</td>
+					</tr>
+				</table>
+				<p class="submit">
+					<input type="submit" name="anmeldungDurchfuehren" class="button-primary" value="eigenes Portrait-Archiv eröffnen" />
+				</p>			
+			</form>
+			<?php } ?>
+		</div>
+	
+	<?php 	
  }
  
  function pawps_admin_menu_mainpage() {
