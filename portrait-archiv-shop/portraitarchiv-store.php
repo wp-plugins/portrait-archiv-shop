@@ -4,7 +4,7 @@
 Plugin Name: Portrait-Archiv.com Photostore
 Plugin URI: http://www.Portrait-Service.com/
 Description: Der Portrait-Archiv.com Photostore stellt dem Benutzer die Moeglichkeit zur einfachen Integration eines Online Foto Nachbestellsystems zur Verfuegung
-Version: 1.1.3
+Version: 1.1.4
 Author: Thomas Schiffler
 Author URI: http://www.Portrait-Service.com/
 */
