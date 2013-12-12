@@ -4,6 +4,30 @@
  	return pawps_readRemoteUrl("getLastUpdateTime") != "keine Berechtigung";
  }
  
+ function pawps_isAnmeldeWsEnabled() {
+ 	$content = file_get_contents(PAWPS_BASE_URL . "/ws/isAnmeldungAktiv.php");
+ 	
+ 	if ($content == "1") {
+ 		return true;
+ 	}
+ 	
+ 	// ansonsten ned
+ 	return false; 	
+ }
+ 
+ function pawps_doAnmeldung($anmeldedaten) {
+ 	$url = PAWPS_BASE_URL . "/ws/createFotograf.php?anmeldedaten=";
+ 	$url .= json_encode($anmeldedaten);
+ 	
+ 	pawps_doDebug ("URL: " . $url);
+ 	
+ 	$result = file_get_contents($url);
+ 	
+ 	pawps_doDebug ("Result: " . $result);
+ 	
+ 	return $result;
+ }
+ 
  function pawps_createReadRemoteUrl($scriptName, $paramString = null) {
  	// Parameter auslesen
  	$paHash = get_option(PAWPS_OPTION_HASHKEY);
@@ -14,7 +38,7 @@
  	}
  
  	// Build URL
- 	$url = "https://www.portrait-archiv.com/wpshop/" . $scriptName . ".php?";
+ 	$url = PAWPS_BASE_URL . "wpshop/" . $scriptName . ".php?";
  	$url .= "id=" . $paUserId . "&hash=" . $paHash . "&rhash=" . $paHashRemote;
  
  	if (isset($paramString)) {
@@ -35,7 +59,7 @@
  function pawps_justReadRemote($url) {
  	pawps_doDebug ("URL: " . $url);
  	
- 	$content =  file_get_contents($url);
+ 	$content = file_get_contents($url);
  	
  	pawps_doDebug ("Result: " . $content);
  	
