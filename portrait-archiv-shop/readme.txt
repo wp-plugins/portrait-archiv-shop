@@ -39,6 +39,17 @@ Ja, prinzipiell ist die Nutzung des Modules auch ausserhalb Deutschlands möglic
 einige Labore die Lieferung von Fotoabzügen, Postern oder Leinwänden nur innerhalb Deutschlands anbieten. 
 Der Verkauf von digitalen Bildprodukten ist selbstverständlich weltweit möglich.
 
+= Wie veröffentliche ich Galerien? =
+Das Plugin zeigt Ihnen alle unter Ihrem Benutzeraccount auf Portrait-Archiv.com veröffentlichten Galerien an. Um eine neue Galerie
+zu veröffentlichen gehen Sie einfach wie gewohnt vor und veröffentlichen die Galerie auf Portrait-Archiv.com. Die neue Galerie 
+wird automatisch in die Galerieliste in Ihrem Adminbereich aufgenommen. 
+
+= Ich habe eine neue Galerie auf Portrait-Archiv.com veröffentlicht, diese wird aber nicht angezeigt =
+Das Plugin arbeitet intern mit einem kleinen Caching-Mechanismus. Hierdurch soll der Seitenaufbau beschleunigt und unnötige Anfragen 
+zwischen Ihrem Blog und Portrait-Archiv.com vermieden werden. Änderungen werden automatisch täglich synchronisiert, sollten Sie eine 
+direkte Aktualisierung Ihrer Daten wünschen so genügt ein Klick auf den Button 'Aktualisieren' in der Administration unter dem
+Menüpunkt 'Galerien'.
+
 == Screenshots ==
 1. Anzeige aller Galerien im Admin-Bereich
 2. Entscheiden Sie, wie Sie Ihre Galerie veröffentlichen möchten
