@@ -3,8 +3,8 @@ Contributors: Thomas Schiffler
 Tags: Portrait-Archiv, Store, Onlineshop, Shop, Foto, Bild
 Donate link: http://www.Portrait-Service.com
 Requires at least: 3.0.1
-Tested up to: 3.6
-Stable tag: 1.0.1
+Tested up to: 3.8
+Stable tag: 1.1.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -38,6 +38,18 @@ Weitere Informationen entnehmen Sie bitte dem Menüpunkt "Portrait-Archiv.com > 
 Ja, prinzipiell ist die Nutzung des Modules auch ausserhalb Deutschlands möglich. Bitte beachten Sie hierbei allerdings dass 
 einige Labore die Lieferung von Fotoabzügen, Postern oder Leinwänden nur innerhalb Deutschlands anbieten. 
 Der Verkauf von digitalen Bildprodukten ist selbstverständlich weltweit möglich.
+Zur Anmeldung eines Portrait-Archiv.com Accounts aus dem Ausland kontaktieren Sie uns bitte über Portrait-Service.com
+
+= Wie veröffentliche ich Galerien? =
+Das Plugin zeigt Ihnen alle unter Ihrem Benutzeraccount auf Portrait-Archiv.com veröffentlichten Galerien an. Um eine neue Galerie
+zu veröffentlichen gehen Sie einfach wie gewohnt vor und veröffentlichen die Galerie auf Portrait-Archiv.com. Die neue Galerie 
+wird automatisch in die Galerieliste in Ihrem Adminbereich aufgenommen. 
+
+= Ich habe eine neue Galerie auf Portrait-Archiv.com veröffentlicht, diese wird aber nicht angezeigt =
+Das Plugin arbeitet intern mit einem kleinen Caching-Mechanismus. Hierdurch soll der Seitenaufbau beschleunigt und unnötige Anfragen 
+zwischen Ihrem Blog und Portrait-Archiv.com vermieden werden. Änderungen werden automatisch täglich synchronisiert, sollten Sie eine 
+direkte Aktualisierung Ihrer Daten wünschen so genügt ein Klick auf den Button 'Aktualisieren' in der Administration unter dem
+Menüpunkt 'Galerien'.
 
 == Screenshots ==
 1. Anzeige aller Galerien im Admin-Bereich
@@ -47,6 +59,10 @@ Der Verkauf von digitalen Bildprodukten ist selbstverständlich weltweit möglic
 5. Eingegangene Bestellungen werden zur Kontrolle in Ihrem Adminbereich angezeigt
 
 == Changelog ==
+= 1.1 =
+* kleine Performanceoptimierungen
+* Eröffnung eines Portrait-Archiv.com Accounts direkt über das Modul
+
 = 1.0.1 =
 * kleine Anpassungen im Default-Template
 * Erweiterung der Readme zur Anzeige der Bilder im Pluginverzeichnis

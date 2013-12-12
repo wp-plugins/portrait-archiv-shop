@@ -11,7 +11,7 @@
  define ('PAWPS_DB_VERSION', 'PAWPS_DB_VERSION');
  define ('PAWPS_DISPLAY_ROWS', 'PAWPS_DISPLAY_ROWS');
  define ('PAWPS_DISPLAY_COLS', 'PAWPS_DISPLAY_COLS');
- define ('PAWPS_TEMPLATE_NAME', 'PAWPS_TEMPLATE_NAME');
+ define ('PAWPS_TEMPLATE_NAME', 'PAWPS_TEMPLATE_NAME'); 
  define ('PAWPS_DEBUG', 'PAWPS_DEBUG');
  
  define ('PAWPS_TABLENAME_SHOOTINGS', $wpdb->prefix . "PAWPS_SHOOTINGS");
@@ -30,5 +30,8 @@
  
  // Standardwerte
  define ('PAWPS_DEFAULT_ERROR', 'keine Berechtigung');
+ 
+ // Umgebungsinfo
+ define ('PAWPS_BASE_URL', 'https://www.portrait-archiv.com/');
  
 ?>
