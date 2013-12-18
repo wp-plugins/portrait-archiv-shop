@@ -1,0 +1,1 @@
+<h2><?php echo $noEntriesMessage; ?></h2>
