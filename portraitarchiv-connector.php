@@ -4,6 +4,10 @@
  	return pawps_readRemoteUrl("getLastUpdateTime") != "keine Berechtigung";
  }
  
+ function pawps_getModuleToken() {
+ 	return pawps_readRemoteUrl("getModuleToken");
+ }
+ 
  function pawps_isAnmeldeWsEnabled() {
  	$content = file_get_contents(PAWPS_BASE_URL . "/ws/isAnmeldungAktiv.php");
  	
@@ -40,7 +44,8 @@
  	// Build URL
  	$url = PAWPS_BASE_URL . "wpshop/" . $scriptName . ".php?";
  	$url .= "id=" . $paUserId . "&hash=" . $paHash . "&rhash=" . $paHashRemote;
- 
+ 	$url .= "&wpUrl=" . urlencode(site_url());
+ 	 
  	if (isset($paramString)) {
  		$url .= "&" . $paramString;
  	}

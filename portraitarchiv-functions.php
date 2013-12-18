@@ -315,11 +315,9 @@
  }
 
  function pawps_generateLocalHash() {
- 	$localPaString = md5("pawps" . $_SERVER['SERVER_ADDR']);
- 	$localPaString = substr($localPaString, 5, 15);
- 	return $localPaString;
+ 	return pawps_getModuleToken();
  }
- 
+  
  function pawps_loadImageById($id) {
  	global $wpdb;
  	
