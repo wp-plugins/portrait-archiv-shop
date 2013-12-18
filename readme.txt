@@ -60,7 +60,7 @@ Menüpunkt 'Galerien'.
 
 == Changelog ==
 = 1.3 =
-* kleine Bugfixes
+* kleine Fixes
 
 = 1.2 =
 * kleine Performanceoptimierungen
