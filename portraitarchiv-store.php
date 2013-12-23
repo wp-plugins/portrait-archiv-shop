@@ -92,6 +92,16 @@ Author URI: http://www.Portrait-Service.com/
  		
  			$pawps_content = str_replace("[pawps_password]", $displayContent, $pawps_content);
  		} 		
+ 		
+ 		// Gallericode
+ 		if (strpos($pawps_content, "[pawps_galeriecode]") > -1) {
+ 			ob_start();
+ 			pawps_shootingByGalleriecode();
+ 			$displayContent = ob_get_contents();
+ 			ob_end_clean();
+ 				
+ 			$pawps_content = str_replace("[pawps_galeriecode]", $displayContent, $pawps_content);
+ 		}
  	}
 
  	return $pawps_content;
@@ -99,7 +109,14 @@ Author URI: http://www.Portrait-Service.com/
  }
  
  function pawps_register_stylesheet() {
- 	wp_register_style('portrait-archiv-shop', plugins_url('portrait-archiv-shop/templates/' . get_option(PAWPS_TEMPLATE_NAME) . '/style.css'));
+ 	$userTemplate = get_option(PAWPS_TEMPLATE_NAME);
+ 	if (strpos($userTemplate, PAWPS_USERTPL_START) > -1) {
+ 		// Benutzertemplate
+ 		wp_register_style('portrait-archiv-shop', pawps_getUsertemplateDirUrl() . $userTemplate . '/style.css');
+ 	} else {
+ 		wp_register_style('portrait-archiv-shop', plugins_url('portrait-archiv-shop/templates/' . get_option(PAWPS_TEMPLATE_NAME) . '/style.css'));
+ 	}
+ 	
  	wp_enqueue_style('portrait-archiv-shop');
  }
  
