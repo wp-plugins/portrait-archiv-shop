@@ -17,7 +17,7 @@
 	 		require pawps_getTemplatePath('eventList');
 	 	} else {
 	 		// keine Shootings verfügbar
-	 		$noEntriesMessage = "Derzeit sind öffentlichen Shootings verfuegbar";
+	 		$noEntriesMessage = "Derzeit sind keine öffentlichen Shootings verfügbar";
 	 		
 	 		// Template anzeigen
 	 		require pawps_getTemplatePath ('noEntries');
@@ -38,6 +38,54 @@
 	 		
 	 	// Template anzeigen
 	 	require pawps_getTemplatePath ('noEntries');
+ 	}
+ }
+ 
+ function pawps_shootingByGalleriecode() {
+ 	if (!isset($_SESSION['PAWPS_LOGIN'])) {
+ 		$passwordCheckDone = false;
+ 		if (isset($_POST['PA_GALLERIECODE']) && (strlen($_POST['PA_GALLERIECODE']) > 0)) {
+ 			// Suche Veranstaltung anhand Galleriecode
+ 			$config = pawps_loadShootingConfig(null, $_POST['PA_GALLERIECODE']);
+ 			if (isset($config) && ($config->state > 0)) {
+ 				$shooting = pawps_loadShootingByData(null, $config->shootingcode);
+ 				if (isset($shooting)) {
+ 					// Shooting anzeigen
+ 					$passwordCheckDone = true;
+ 					$_SESSION['PAWPS_LOGIN'] = $config->id;
+ 				}
+ 			}
+ 
+ 			if (!$passwordCheckDone) {
+ 				$error = "Zu dem von Ihnen eingegebenen Code konnte keine Gallerie gefunden reden";
+ 			}
+ 		}
+ 			
+ 		// noch kein Passwort in Session -> frage Passwort ab
+ 		if (!$passwordCheckDone) {
+ 			require pawps_getTemplatePath ('galleriecodeForm');
+ 		}
+ 	}
+ 
+ 	if (isset($_SESSION['PAWPS_LOGIN'])) {
+ 		// Passwort in Session gesetzt -> Lade Veranstaltung
+ 		$config = pawps_loadShootingConfig($_SESSION['PAWPS_LOGIN']);
+ 		if (isset($config)) {
+ 				
+ 			// Shooting setzen
+ 			$shooting = pawps_loadShootingByData(null, $config->shootingcode);
+ 			if (isset($shooting)) {
+ 				$_GET['pawps_shooting'] = $shooting->id;
+ 			}
+ 		}
+ 			
+ 		if (isset($shooting)) {
+ 			pawps_handlePublicRequests();
+ 			//pawps_showEvent(null, $shooting);
+ 		} else {
+ 			unset ($_SESSION['PAWPS_LOGIN']);
+ 			pawps_shootingByGalleriecode();
+ 		}
  	}
  }
  
@@ -346,7 +394,7 @@
 			// prüfe ob AGB und Datenschutz akzeptiert
 			$error = "";
 			if (!(isset($_POST['acceptAgb']) && ($_POST['acceptAgb'] == TRUE))) {
-				$error .= "Bitte akzeptieren Sie die 'Allgemeine GeschÃ¤fts- und Lieferbedingungen'<br/>";
+				$error .= "Bitte akzeptieren Sie die 'Allgemeine Geschäfts- und Lieferbedingungen'<br/>";
 			}
 			if (!(isset($_POST['acceptDatenschutz']) && ($_POST['acceptDatenschutz'] == TRUE))) {
 				$error .= "Bitte akzeptieren Sie die 'Datenschutzbestimmungen'<br/>";

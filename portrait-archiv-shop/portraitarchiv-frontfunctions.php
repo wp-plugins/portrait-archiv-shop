@@ -15,8 +15,28 @@
 	 
  } 
  
- function pawps_getTemplatePath($templateName) {
-	return plugin_dir_path( __FILE__ ) . '/templates/' . get_option(PAWPS_TEMPLATE_NAME) . '/' . $templateName . '.tpl';
+ function pawps_getTemplatePath($fileName) {
+ 	$userTemplate = get_option(PAWPS_TEMPLATE_NAME);
+	if (strpos($userTemplate, PAWPS_USERTPL_START) > -1) {
+		// Benutzertemplate
+		return pawps_getUsertemplateDir() . $userTemplate . "/" . $fileName . ".tpl"; 
+	} else {
+		return pawps_getTemplateFilePath($fileName . '.tpl');
+	}
+ }
+ 
+ function pawps_getTemplateFilePath($fileName) {
+	return plugin_dir_path( __FILE__ ) . 'templates/' . get_option(PAWPS_TEMPLATE_NAME) . '/' . $fileName;
+ }
+ 
+ function pawps_getUsertemplateDir() {
+ 	$upload_dir = wp_upload_dir();
+ 	return $upload_dir['basedir'] . "/pawps_usertemplates/";
+ }
+ 
+ function pawps_getUsertemplateDirUrl() {
+ 	$upload_dir = wp_upload_dir();
+ 	return $upload_dir['baseurl'] . "/pawps_usertemplates/";
  }
 
 ?>

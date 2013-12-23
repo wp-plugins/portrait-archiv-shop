@@ -30,6 +30,7 @@
  
  // Standardwerte
  define ('PAWPS_DEFAULT_ERROR', 'keine Berechtigung');
+ define ('PAWPS_USERTPL_START', 'eigeneVorlage-');
  
  // Umgebungsinfo
  define ('PAWPS_BASE_URL', 'https://www.portrait-archiv.com/');

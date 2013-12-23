@@ -29,16 +29,24 @@
 		
 	add_submenu_page(
 		'pawps_admin_menu_mainpage',
-		'Portrait-Archiv.com Grundeinstellungen',
-		'Grundeinstellungen',
+		'Portrait-Archiv.com Verbindungsdaten',
+		'Verbindungsdaten',
 		'manage_options',
 		'pawps_admin_menu_grundeinstellungen',
 		'pawps_admin_menu_grundeinstellungen');
 	
 	add_submenu_page(
 		'pawps_admin_menu_mainpage',
-		'Übersicht der Galerien',
-		'Galerien',
+		'Portrait-Archiv.com Design',
+		'Design',
+		'manage_options',
+		'pawps_admin_menu_template',
+		'pawps_admin_menu_template');
+	
+	add_submenu_page(
+		'pawps_admin_menu_mainpage',
+		'Übersicht der Gallerien',
+		'Gallerien',
 		'manage_options',
 		'pawps_admin_menu_shootings',
 		'pawps_admin_menu_shootings');
@@ -68,6 +76,285 @@
  	<?php 	
  }
  
+ function pawps_admin_menu_template() {
+	pawps_showAdminHeader("Design konfigurieren");
+	
+	if ( !current_user_can( 'manage_options' ) )  {
+		wp_die( __( 'Ihre aktuelle Berechtigung verhindert den Zugriff auf diese Seite' ) );
+	}
+	
+ 	if (!pawps_isConnectionWorking()) {
+		wp_die( __( 'Bitte konfigurieren Sie zunächst die Verbindung im Menü >Verbindungsdaten<' ) );
+	}
+
+	
+	// alte Werte aus Options laden
+	$displayRows = get_option(PAWPS_DISPLAY_ROWS);
+	$displayCols = get_option(PAWPS_DISPLAY_COLS);
+	
+	if (isset($_POST['anzeigeeinstellungSubmit'])) {
+		$displayRows = $_POST['PA_DISPLAY_ZEILEN'];
+		$displayCols = $_POST['PA_DISPLAY_SPALTEN'];
+
+		if	(!is_numeric($displayRows) || !is_numeric($displayCols) ||
+		$displayRows < 1 || $displayCols < 1) {
+			$error = "Eine Darstellung mit Werten kleiner 1 in den Feldern 'Zeilen' oder 'Spalten' wird nicht unterstützt.";
+		} else {
+			update_option(PAWPS_DISPLAY_ROWS, $displayRows);
+			update_option(PAWPS_DISPLAY_COLS, $displayCols);
+		}
+
+		$templateName = $_POST['pawps_template'];
+		update_option(PAWPS_TEMPLATE_NAME, $_POST['pawps_template']);
+
+		$message = "Ihre Änderungen wurden übernommen";
+	} else if (isset($_POST['createUserTemplate'])) {
+		if (strlen($_POST['newUsertemplateName']) > 0) {
+			if (!is_dir(pawps_getUsertemplateDir() . PAWPS_USERTPL_START . $_POST['newUsertemplateName'])) {
+				$ftpQuestion = true;
+				$_POST['newUsertemplateName'] = str_replace(' ', '_', $_POST['newUsertemplateName']);
+			} else {
+				$error = "Das angegebene Template existiert bereits";
+			}
+		} else {
+			$error = "Bitte geben Sie einen Templatenamen an";
+		}
+	} else if (isset($_POST['createUserTemplateFtp'])) {
+		if (!(strlen($_POST['PA_FTP_HOST']) > 0)) {
+			$error .= "Bitte geben Sie Ihren FTP-Host an";
+		} 
+		if (!(strlen($_POST['PA_FTP_USER']) > 0)) {
+			$error .= "Bitte geben Sie Ihren Username an";
+		} 
+		if (!(strlen($_POST['PA_FTP_PASSWORD']) > 0)) {
+			$error .= "Bitte geben Sie Ihre Passwort an";
+		}
+		
+		if (strlen($error) == 0) {
+			// kein Fehler -> FTP Verbindung herstellen
+			$conn_id = ftp_connect($_POST['PA_FTP_HOST']);
+			$login_result = ftp_login($conn_id, $_POST['PA_FTP_USER'], $_POST['PA_FTP_PASSWORD']);
+			
+			if ($login_result) {
+				$upload_dir = wp_upload_dir();
+				$newHome = pawps_mksubdirs($conn_id, $upload_dir['basedir'], "pawps_usertemplates/" . PAWPS_USERTPL_START . $_POST['newUsertemplateName']);
+				$newHome .= "pawps_usertemplates/" . PAWPS_USERTPL_START . $_POST['newUsertemplateName'];
+				
+				pawps_copyDirectory($conn_id, pawps_getTemplateFilePath(''), $newHome);
+				// 			$upload_dir = wp_upload_dir();
+				// 			ftp_chdir($conn_id, $upload_dir['basedir']);
+				// 			ftp_mkdir($conn_id, "pawps_usertemplates");
+				
+				$message = "Das Template wurde erfolgreich angelegt und steht Ihnen ab sofort zur Verfügung";
+			} else {
+				$error = "Die FTP-Verbindung konnte nicht hergestellt werden";
+			}
+		}
+		
+		if (strlen($error) > 0) {
+			$ftpQuestion = true;
+		}
+	}
+			
+	// Liste möglicher Templates
+	$tmpBaseDir = plugin_dir_path( __FILE__ ) . "/templates";
+	$handle =  opendir($tmpBaseDir);
+	$verzeichnisliste = array();
+	while ($datei = readdir($handle)) {
+		if ($datei != "." && $datei != "..") {
+			if (is_dir($tmpBaseDir . '/' . $datei)) {
+				array_push($verzeichnisliste, $datei);
+			}
+		}
+	}
+	
+	if (is_dir(pawps_getUsertemplateDir())) {
+		// User-Templates
+		$handle =  opendir(pawps_getUsertemplateDir());
+		while ($datei = readdir($handle)) {
+			if ($datei != "." && $datei != "..") {
+				if (is_dir(pawps_getUsertemplateDir() . '/' . $datei)) {
+					array_push($verzeichnisliste, $datei);
+				}
+			}
+		}
+	}
+		
+	$currentTemplate = get_option(PAWPS_TEMPLATE_NAME);
+
+	?>
+	<div class="wrap">
+		<h3>Templateauswahl</h3>
+		<?php pawps_displayError($error, $message); ?>
+		<form name="verbindungsDatenForm" method="post" action="">
+			<table class="wp-list-table widefat fixed pages" cellspacing="0">
+				<tr>
+					<td width="150px">Galleriedarstellung:</td>
+					<td>
+						Zeilen: <input type="text" name="PA_DISPLAY_ZEILEN" value="<?php echo $displayRows; ?>" size="3" maxlength="3" <?php if ($ftpQuestion) echo disabled; ?>>
+						Spalten: <input type="text" name="PA_DISPLAY_SPALTEN" value="<?php echo $displayCols; ?>" size="3" maxlength="3"  <?php if ($ftpQuestion) echo disabled; ?>>
+						<br/>
+						<div style="font-size:10px"><b>Hinweis:</b> Legt fest wie viele Spalten und Zeilen an Bildern max. pro Gallerieseite angezeigt werden sollen</div>
+					</td>
+				</tr>
+				<tr>
+					<td>Template:</td>
+					<td>
+						<select name="pawps_template" <?php if ($ftpQuestion) echo disabled; ?>>
+						<?php
+							foreach ($verzeichnisliste as $verzeichnis) {
+								echo "<option";
+								if ($verzeichnis == $currentTemplate) {
+									echo " selected";
+								}
+								echo ">";
+								echo $verzeichnis;
+								echo "</option>";
+							} 
+						?>
+						</select>
+						<br/>
+						neues Benutzertemplate-Template anlegen
+						<input type="text" name="newUsertemplateName" size="15" maxlength="20" value="<?php echo $_POST['newUsertemplateName']; ?>" <?php if ($ftpQuestion) echo disabled; ?>/> <input type="submit" name="createUserTemplate" class="button-primary" value="Benutzertemplate anlegen"  <?php if ($ftpQuestion) echo disabled; ?>/>
+					</td>
+				</tr>
+			</table>
+			<?php if (!isset($ftpQuestion)) { ?>
+			<p class="submit">
+				<input type="submit" name="anzeigeeinstellungSubmit" class="button-primary" value="Anzeigekonfiguration speichern" />
+			</p>
+			<?php } ?>
+		</form>
+	</div>
+	
+	<?php
+		unset($error);
+		unset($message);
+	
+		if (isset($ftpQuestion)) {
+			// FTP-Zugangsdatenabfrage anzeigen
+			?>
+			
+			<div class="wrap">
+				<h3>FTP Zugangsdaten</h3>
+				<?php pawps_displayError($error, $message); ?>
+				Damit das neue Benutzertemplate angelegt werden kann müssen einige Daten auf Ihrem FTP kopiert werden. Die Zugangsdaten werden selbst verständlich NICHT gespeichert sondern nur für die aktuelle Aktion genutzt:
+				<form name="verbindungsDatenForm" method="post" action="">
+					<input type="hidden" name="newUsertemplateName" value="<?php echo $_POST['newUsertemplateName']; ?>"/>
+					<table class="wp-list-table widefat fixed pages" cellspacing="0">
+						<tr>
+							<td width="150px">FTP-Host:</td>
+							<td><input type="text" name="PA_FTP_HOST" value="<?php echo $_POST['PA_FTP_HOST']; ?>" size="30" maxlength="50"></td>
+						</tr>
+						<tr>
+							<td>FTP-User:</td>
+							<td><input type="text" name="PA_FTP_USER" value="<?php echo $_POST['PA_FTP_USER']; ?>" size="20" maxlength="20"></td>
+						</tr>
+												<tr>
+							<td>FTP-Passwort:</td>
+							<td><input type="password" name="PA_FTP_PASSWORD" value="<?php echo $_POST['PA_FTP_PASSWORD']; ?>" size="20" maxlength="20"></td>
+						</tr>
+					</table>
+					<p class="submit">
+						<input type="submit" name="createUserTemplateFtp" class="button-primary" value="Benutzertemplate anlegen" />
+					</p>
+				</form>			
+			<?php 
+		} else {
+			// Editor anzeigen	
+			$editableFileList = array(
+				"style.css" => "Stylesheet",
+				"siteHeader.tpl" => "Header",
+				"event.tpl" => "Shootinganzeige",
+				"pictureDetauls.tpl" => "einzelnes Bild",
+				"eventList.tpl" => "Shooting-Liste",
+				"noEntries.tpl" => "keine Elemente vorhanden",
+				"passwordForm.tpl" => "Maske - Gästekennwort",
+				"galleriecodeForm.tpl" => "Maske - Galleriecode",
+				"warenkorbList.tpl" => "Warenkorb",
+				"warenkorbZusammenfassung.tpl" => "Warenkorb Zusammenfassung"
+				);
+	
+			$tplName = get_option(PAWPS_TEMPLATE_NAME);
+			if (strpos($tplName, PAWPS_USERTPL_START) > -1) {
+				$currentTemplatePath = pawps_getUsertemplateDir() . $tplName . "/";
+				$userTemplate = true;
+			} else {
+				$currentTemplatePath = plugin_dir_path( __FILE__ ) . 'templates/' . $tplName . "/";
+				$userTemplate = false;
+			}
+					
+			if (isset($_POST['templateUpdate'])) {
+				// Änderungen in Datei speichern
+				$currentFilePath = $_POST['filePath'];
+				$currentFileName = $editableFileList[$currentFilePath];
+	
+				$datei = fopen($currentTemplatePath . $currentFilePath,"w");
+				
+				if (get_magic_quotes_gpc()) {
+					$code = stripslashes($_POST['templateContent']);
+				}else{
+					$code = $_POST['templateContent'];
+				}
+				
+				fwrite($datei, $code);
+			} else if (isset($_GET['editFile']) && (strlen($_GET['editFile']) > 0)) {
+				$currentFilePath = $_GET['editFile'];
+				$currentFileName = $editableFileList[$currentFilePath];
+			}
+			
+			if (!isset($currentFileName)) {
+				$currentFileName = "Stylesheet";
+				$currentFilePath = "style.css";
+			}
+		?>
+		
+		<div class="wrap">
+			<h3>Template bearbeiten</h3>
+			<?php pawps_displayError($error, $message); ?>
+			
+			
+			<table width="100%" border="0">
+				<tr valign="top">
+					<td>
+						<form name="templateEditForm" method="post" action="">
+							<input type="hidden" name="filePath" value="<?php echo $currentFilePath; ?>" />
+							<b>aktuelles Template:</b>  <?php echo $tplName; ?> / <b>Vorlage:</b> <?php echo $currentFileName; ?><br/>
+							<textarea name="templateContent" rows="10" cols="90"><?php
+
+							echo file_get_contents($currentTemplatePath . $currentFilePath);
+							
+							?></textarea>
+							
+							<?php if ($userTemplate) { ?>
+								<p class="submit">
+									<input type="submit" name="templateUpdate" class="button-primary" value="Änderungen speichern" />
+								</p>
+							<?php } else { ?>
+								<br/><b>Die Bearbeitung der Standard-Templates ist nicht möglich, bitte legen Sie sich ein Benutzertemplate an um dies zu bearbeiten.</b>
+							<?php } ?>
+						</form>
+					</td>
+					<td width="300px">
+						<b>verfügbare Templates:</b><br/>
+						<ul>
+						<?php
+							foreach ($editableFileList as $fileName => $fileTitle) {
+								echo "<li>";
+								echo "<a href='" . add_query_arg ('editFile', $fileName) . "'>" . $fileTitle . "</a>";
+								echo "</li>";
+							} 
+						?>
+						</ul>
+					</td>
+				</tr>
+			</table>							
+		</div>
+		
+		<?php  	
+		}
+ }
+ 
  function pawps_admin_menu_anmeldung() {
 	pawps_showAdminHeader("Eröffnung eines neuen Portrait-Archives");
 		
@@ -80,7 +367,7 @@
 		<div class="wrap">
 			<h3>Anmeldeinformationen</h3>
 			Um das Plugin nutzen zu können benötigen Sie einen kostenlosen Account bei Portrait-Archiv.com. Hier veröffentlichen Sie 
-			Ihre Galerien welche über das Plugin in Ihre Seite intergriert werden.<br/><br/>
+			Ihre Gallerien welche über das Plugin in Ihre Seite intergriert werden.<br/><br/>
 			Ihnen gefällt unser Portrait-Archiv und Sie möchten Ihren Kunden gerne diesen Onlineservice anbieten?<br/>
 			Eröffnen Sie noch heute Ihr eigenes Online Portraitstudio – ganz unverbindlich und ohne Risiko und laufende Kosten. Wenn Sie 
 			keine Umsatzsteigerung durch den Einsatz des Portrait-Archiv haben dann kostet Sie dies selbstverständlich keinen Cent.<br/>
@@ -253,10 +540,10 @@
  		
  		<div class="wrap">
  			<h3>Systemeinrichtung</h3>
- 			Damit das Shopmodul auf Ihre Galerien bei Portrait-Archiv.com zugreifen ist es notwendig dass Sie die 
+ 			Damit das Shopmodul auf Ihre Gallerien bei Portrait-Archiv.com zugreifen ist es notwendig dass Sie die 
  			Systemauthentfizierung durchführen. Führen Sie hierzu die folgenden Schritte durch:
  			<ol>
- 				<li>Navigieren Sie innerhalb Ihres Wordpress-Modules zum Menüpunkt 'Portrait-Archiv.com > Grundeinstellungen'
+ 				<li>Navigieren Sie innerhalb Ihres Wordpress-Modules zum Menüpunkt 'Portrait-Archiv.com > Verbindungsdaten'
  				und notieren Sie sich den Wert aus dem Feld 'Modul-Token'<br/>
  				<img src="<?php echo plugins_url( 'portrait-archiv-shop/resources/docu/pawps_einrichten_1.png' ); ?>" alt="Modul-Token im WP-Adminbereich" class="pawps_image" /></li> 				
  				<li>Loggen Sie sich mit Ihren Userdaten auf Portrait-Archiv.com ein. Klicken Sie auf dem Menüpunkt 
@@ -267,7 +554,7 @@
  				<img src="<?php echo plugins_url( 'portrait-archiv-shop/resources/docu/pawps_einrichten_3.png' ); ?>" alt="Token auf Portrait-Archiv.com generieren" width="500px" class="pawps_image" /><br/>
  				</li>
  				<li>Notieren Sie sich nun die User-ID sowie den generierten 'Portrait-Archiv.com Token' und übertragen 
- 				sie diese in die entsprechenden Felder in den 'Grundeinstellungen' Ihres Modules.<br/>
+ 				sie diese in die entsprechenden Felder in den 'Verbindungsdaten' Ihres Modules.<br/>
  				Speichern Sie die Änderungen durch einen Klick auf den Button 'Verbindungsdaten speichern'<br/>
  				<img src="<?php echo plugins_url( 'portrait-archiv-shop/resources/docu/pawps_einrichten_4.png' ); ?>" alt="Modulkonfiguration abschliessen" width="500px" class="pawps_image" /><br/>
  				Die Verbindung zwischen Portrait-Archiv.com und Ihrer Wordpress-Modulinstallation ist nun erfolgreich
@@ -275,8 +562,8 @@
  			</ol>
  		
  	 		<h3>mögliche Template-Tags</h3>
- 	 		Mit Hilfe des Portrait-Archiv.com Shopmodules haben Sie die Möglichkeit sowohl eine Liste von Galerien  
- 	 		als auch einzelne Galerien in Ihre bestehenden Wordpress-Seiten einzubinden. Hierzu genügt es einen bestimmten Tag 
+ 	 		Mit Hilfe des Portrait-Archiv.com Shopmodules haben Sie die Möglichkeit sowohl eine Liste von Gallerien  
+ 	 		als auch einzelne Gallerien in Ihre bestehenden Wordpress-Seiten einzubinden. Hierzu genügt es einen bestimmten Tag 
  	 		in Ihre Seite einzufügen. Das Modul ersetzt dieses Tag selbstständig gegen die entsprechenden Inhalte. <br/>
  	 		<br/>
  	 		Derzeit stehen folgende Template-Tags zur Verfügung: 
@@ -284,7 +571,7 @@
  	 		<table class="wp-list-table widefat fixed pages" cellspacing="0">
  				<thead>
  					<tr>
- 						<th scope='col' width="200px">Beispiel</th>
+ 						<th scope='col' width="230px">Beispiel</th>
  						<th scope='col'>Beschreibung</th>
  						</tr>
  				</thead>
@@ -293,19 +580,27 @@
  						<td>[pawps_publicList]</td>
  						<td>
  							Fügt eine Liste aller Ihrer Gallieren ein, welche von Ihnen für die Anzeige in der 
- 							öffentlichen Liste markiert wurden. Die Galerien werden mit dem Titel sowie einem zufälligen
- 							Vorschaubild aus der Galerie dargestellt.  Nach dem Klick auf den Titel oder das Vorschaubild
+ 							öffentlichen Liste markiert wurden. Die Gallerien werden mit dem Titel sowie einem zufälligen
+ 							Vorschaubild aus der Gallerie dargestellt.  Nach dem Klick auf den Titel oder das Vorschaubild
  							gelangt Ihr Besucher, je nach Konfiguration, entweder zur Eingabe des von Ihnen hinterlegten 
- 							Gästekennwortes oder direkt zur Galerie.
+ 							Gästekennwortes oder direkt zur Gallerie.
  						</td>
  					</tr>
  					<tr valign="top">
  						<td>[pawps_galerie]1[/pawps_galerie]</td>
  						<td>
- 							Fügt eine einzelne Galerie zur Anzeige in Ihre Seite ein. Die ID der gewählte Galerie entspricht 
- 							der in der Galerieübersicht angezeigten numerischen ID. Ersetzen Sie einfach die 1 aus dem Beispiel
- 							gegen die gewünschte ID um die Galerie in Ihre Seite einzufügen. Der Besucher wird direkt beim Besuch 
- 							der Seite auf die gewünschte Galerie bzw. zur Abfrage des hitnerlegten Gästekennwortes geleitet. 
+ 							Fügt eine einzelne Gallerie zur Anzeige in Ihre Seite ein. Die ID der gewählte Gallerie entspricht 
+ 							der in der Gallerieübersicht angezeigten numerischen ID. Ersetzen Sie einfach die 1 aus dem Beispiel
+ 							gegen die gewünschte ID um die Gallerie in Ihre Seite einzufügen. Der Besucher wird direkt beim Besuch 
+ 							der Seite auf die gewünschte Gallerie bzw. zur Abfrage des hitnerlegten Gästekennwortes geleitet. 
+ 						</td>
+ 					</tr>
+ 					<tr valign="top">
+ 						<td>[pawps_galeriecode]</td>
+ 						<td>
+ 							Fügt den Dialog zur Eingabe des Portrait-Archiv.com Galleriecodes ein. Bei Aufruf der Seite mit dem eingefügten 
+ 							Tag ist lediglich der Eingabedialog sichtbar. Nach Eingabe des entsprechenden Galleriecodes gelangt der Besucher 
+ 							zur jeweiligen Gallerie. 
  						</td>
  					</tr>
  					<tr valign="top">
@@ -313,7 +608,7 @@
  						<td>
  							Fügt den Dialog zur Eingabe eines Gästepasswortes ein. Bei Aufruf der Seite mit dem eingefügten 
  							Tag ist lediglich der Passwortdialog sichtbar. Nach Eingabe des individuell festgelegten Gästekennwortes 
- 							gelangt der Besucher zur jeweiligen Galerie. 
+ 							gelangt der Besucher zur jeweiligen Gallerie. 
  						</td>
  					</tr>
  				</tbody>
@@ -321,10 +616,10 @@
  			
  			<h3>weitere Hilfeartikel</h3>
  	 		<ul>
- 	 			<li><a href="http://www.portrait-service.com/portrait-archiv/unsere-antworten-auf-ihre-fragen/wie-stelle-ich-die-verbindung-zwischen-wordpress-und-meinen-galerien-her/" target="_blank">Wie stelle ich die Verbindung zwischen WordPress und meinen Galerien her?</a></li>
+ 	 			<li><a href="http://www.portrait-service.com/portrait-archiv/unsere-antworten-auf-ihre-fragen/wie-stelle-ich-die-verbindung-zwischen-wordpress-und-meinen-galerien-her/" target="_blank">Wie stelle ich die Verbindung zwischen WordPress und meinen Gallerien her?</a></li>
  	 			<li><a href="http://www.portrait-service.com/portrait-archiv/unsere-antworten-auf-ihre-fragen/wie-kann-ich-meine-shootings-in-meinen-wordpress-blog-integrieren/" target="_blank">Wie kann ich meine Shootings in meinen WordPress-Blog integrieren?</a></li>
  	 			<li><a href="http://www.portrait-service.com/portrait-archiv/unsere-antworten-auf-ihre-fragen/wie-kann-ich-das-design-meines-wordpress-shops-aendern/" target="_blank">Wie kann ich das Design meines WordPress Shops ändern?</a></li>
- 	 			<li><a href="http://www.portrait-service.com/portrait-archiv/unsere-antworten-auf-ihre-fragen/wie-kann-ich-den-anzeigemodus-einer-galerie-aendern/" target="_blank">Wie kann ich den Anzeigemodus einer Galerie ändern?</a></li>
+ 	 			<li><a href="http://www.portrait-service.com/portrait-archiv/unsere-antworten-auf-ihre-fragen/wie-kann-ich-den-anzeigemodus-einer-galerie-aendern/" target="_blank">Wie kann ich den Anzeigemodus einer Gallerie ändern?</a></li>
  	 		</ul>
  	 	</div>
  		
@@ -332,7 +627,7 @@
  }
 
  function pawps_admin_menu_grundeinstellungen() {
-	pawps_showAdminHeader("Grundeinstellungen");
+	pawps_showAdminHeader("Verbindungsdaten");
  	 	
 	if ( !current_user_can( 'manage_options' ) )  {
 		wp_die( __( 'Ihre aktuelle Berechtigung verhindert den Zugriff auf diese Seite' ) );
@@ -367,7 +662,7 @@
 	
 	?>
  		<div class="wrap">
- 			<h3>Portrait-Archiv.com Grundeinstellungen</h3>
+ 			<h3>Portrait-Archiv.com Verbindungsdaten</h3>
  			<?php pawps_displayError($error, $message); ?>
  			<form name="verbindungsDatenForm" method="post" action="">
 				<table class="wp-list-table widefat fixed pages" cellspacing="0">
@@ -395,88 +690,9 @@
 				</p>
 			
 			</form>
- 		</div> 	
+ 		</div>
  		
- 	<?php 
- 		if (pawps_isConnectionWorking()) {
-			unset($error);
-			unset($message);
-			
-			// alte Werte aus Options laden
-			$displayRows = get_option(PAWPS_DISPLAY_ROWS);
-			$displayCols = get_option(PAWPS_DISPLAY_COLS);
-						
-			if (isset($_POST['anzeigeeinstellungSubmit'])) {
-				$displayRows = $_POST['PA_DISPLAY_ZEILEN'];
-				$displayCols = $_POST['PA_DISPLAY_SPALTEN'];
-				
-				if	(!is_numeric($displayRows) || !is_numeric($displayCols) ||
-					$displayRows < 1 || $displayCols < 1) {
-					$error = "Eine Darstellung mit Werten kleiner 1 in den Feldern 'Zeilen' oder 'Spalten' wird nicht unterstützt.";
-				} else {
-					update_option(PAWPS_DISPLAY_ROWS, $displayRows);
-					update_option(PAWPS_DISPLAY_COLS, $displayCols);
-				}
-				
-				update_option(PAWPS_TEMPLATE_NAME, $_POST['pawps_template']);
-				
-				$message = "Ihre Änderungen wurden übernommen";
-			}
-			
-			// Liste möglicher Templates
-			$tmpBaseDir = plugin_dir_path( __FILE__ ) . "/templates";
-			$handle =  opendir($tmpBaseDir);
-			$verzeichnisliste = array();
-			while ($datei = readdir($handle)) {
-				if ($datei != "." && $datei != "..") {
-					if (is_dir($tmpBaseDir . '/' . $datei)) {
-						array_push($verzeichnisliste, $datei);
-					}
-				}
-			}
-			$currentTemplate = get_option(PAWPS_TEMPLATE_NAME);
-	?>
-	 		<div class="wrap">
-	 			<h3>Anzeige Konfiguration</h3>
-	 			<?php pawps_displayError($error, $message); ?>
-	 			<form name="verbindungsDatenForm" method="post" action="">
-					<table class="wp-list-table widefat fixed pages" cellspacing="0">
-						<tr>
-							<td width="150px">Galeriedarstellung:</td>
-							<td>
-								Zeilen: <input type="text" name="PA_DISPLAY_ZEILEN" value="<?php echo $displayRows; ?>" size="3" maxlength="3" >
-								Spalten: <input type="text" name="PA_DISPLAY_SPALTEN" value="<?php echo $displayCols; ?>" size="3" maxlength="3" >
-								<br/>
-								<div style="font-size:10px"><b>Hinweis:</b> Legt fest wie viele Spalten und Zeilen an Bildern max. pro Galerieseite angezeigt werden sollen</div>
-							</td>
-						</tr>
-						<tr>
-							<td>Template:</td>
-							<td>
-								<select name="pawps_template">
-									<?php
-										foreach ($verzeichnisliste as $verzeichnis) {
-											echo "<option";
-											if ($verzeichnis == $currentTemplate) {
-												echo " selected";
-											}
-											echo ">";
-											echo $verzeichnis;
-											echo "</option>";
-										} 
-									?>
-								</select>
-							</td>
-						</tr>
-					</table>
-					<p class="submit">
-						<input type="submit" name="anzeigeeinstellungSubmit" class="button-primary" value="Anzeigekonfiguration speichern" />
-					</p>
-				
-				</form>
-	 		</div> 	
- 	<?php
- 		} 		
+ 	<?php  	 		
  }
  
  function pawps_admin_menu_debug() {
@@ -530,7 +746,7 @@
  	}
  	
  	if (!pawps_isConnectionWorking()) {
- 		wp_die( __( 'Bitte konfigurieren Sie zunächst die Verbindung im Menü >Grundeinstellung<' ) );
+ 		wp_die( __( 'Bitte konfigurieren Sie zunächst die Verbindung im Menü >Verbindungsdaten<' ) );
  	}
  	
  	// Errors anzeigen
@@ -595,14 +811,14 @@
  }
  
  function pawps_admin_menu_shootings() {
-	pawps_showAdminHeader("Galerien"); 
+	pawps_showAdminHeader("Gallerien"); 
  		
  	if ( !current_user_can( 'manage_options' ) )  {
  		wp_die( __( 'Ihre aktuelle Berechtigung verhindert den Zugriff auf diese Seite' ) );
  	}
 
  	if (!pawps_isConnectionWorking()) {
-		wp_die( __( 'Bitte konfigurieren Sie zunächst die Verbindung im Menü >Grundeinstellung<' ) );
+		wp_die( __( 'Bitte konfigurieren Sie zunächst die Verbindung im Menü >Verbindungsdaten<' ) );
 	}
 
 	// Errors anzeigen
@@ -731,6 +947,7 @@
 						<select name="PA_SHOOTINGTYPE">
 							<option value="0" <?php if ($config->state == 0) echo 'selected';?>>inaktiv - Shooting ist auf dieser Seite nicht verfügbar</option>
 							<option value="1" <?php if ($config->state == 1) echo 'selected';?>>Verfügbar durch Eingabe des Gästepasswortes</option>
+							<option value="5" <?php if ($config->state == 5) echo 'selected';?>>Verfügbar durch Eingabe des Galleriecodes</option>
 							<option value="4" <?php if ($config->state == 4) echo 'selected';?>>Verfügbar ohne Gästepasswortes</option>
 							<option value="2" <?php if ($config->state == 2) echo 'selected';?>>Darstellung in öffentlicher Liste ohne Passwort</option>
 							<option value="3" <?php if ($config->state == 3) echo 'selected';?>>Darstellung in öffentlicher Liste mit Gästepasswort</option>
@@ -926,7 +1143,7 @@
 					</p>
 			</form>
 			
-			<h3>Aktuelle Galerien</h3>
+			<h3>Aktuelle Gallerien</h3>
 			<?php 
 				$aktuelleShootings = pawps_getShootingList();
 				if (isset($aktuelleShootings) && (count($aktuelleShootings) > 0)) {
@@ -948,14 +1165,16 @@
 									foreach ($aktuelleShootings as $shooting) {
 										echo "<tr valign=\"top\">";
 											echo "<td align='center'>";
-											echo "<a href='" . add_query_arg ('showShootingImages', $shooting->id) . "' title='Bilder der Galerie anzeigen'><img src='" . plugins_url( 'resources/eye.png' , __FILE__ ) . "' border='0' height='15px' width='15px' /></a>";
-											echo "<a href='" . add_query_arg ('showShootingPricelist', $shooting->id) . "' title='Preisliste der Galerie anzeigen'><img src='" . plugins_url( 'resources/euro.png' , __FILE__ ) . "' border='0' height='15px' width='15px' style='padding-left: 5px'/></a>";
+											echo "<a href='" . add_query_arg ('showShootingImages', $shooting->id) . "' title='Bilder der Gallerie anzeigen'><img src='" . plugins_url( 'resources/eye.png' , __FILE__ ) . "' border='0' height='15px' width='15px' /></a>";
+											echo "<a href='" . add_query_arg ('showShootingPricelist', $shooting->id) . "' title='Preisliste der Gallerie anzeigen'><img src='" . plugins_url( 'resources/euro.png' , __FILE__ ) . "' border='0' height='15px' width='15px' style='padding-left: 5px'/></a>";
 											echo "</td>";
 											echo "<td>";
 											echo $shooting->id;
 											echo "</td>";
 											echo "<td>";
 											echo $shooting->title;
+											echo "<br/>";
+											echo "<a href='https://www.portrait-archiv.com/?vCode=" . $shooting->accesscode . "' target='_blank'>" . $shooting->accesscode . "</a>"; 
 											echo "</td>";
 											echo "<td>" . date('d.m.Y', strtotime($shooting->shootingdate)) . "</td>";
 											echo "<td>" . $shooting->imageCount . "</td>";
@@ -986,7 +1205,7 @@
 					<?php 
 				} else {
 					// keine Shootings vorhanden
-					?>- Bisher sind keine Galerien für Sie hinterlegt - <?php 
+					?>- Bisher sind keine Gallerien für Sie hinterlegt - <?php 
 				}
 			
 			?>
