@@ -478,6 +478,58 @@
  	if (eregi($urlregex, $url)) {return true; } else {return false; }
  }
  
+ function pawps_copyDirectory($conn_id, $src_dir, $dst_dir) {
+ 	$dst_dir = "/" . $dst_dir;
+ 	$d = dir($src_dir);
+ 	while($file = $d->read()) { // do this for each file in the directory
+ 		if ($file != "." && $file != "..") { // to prevent an infinite loop
+ 			if (is_dir($src_dir."/".$file)) { // do the following if it is a directory
+ 				if (!@ftp_chdir($conn_id, $dst_dir."/".$file)) {
+ 					ftp_mkdir($conn_id, $dst_dir."/".$file); // create directories that do not yet exist
+ 				}
+ 				pawps_copyDirectory($conn_id, $src_dir."/".$file, $dst_dir."/".$file); // recursive part
+ 			} else {
+ 				$upload = ftp_put($conn_id, $dst_dir."/".$file, $src_dir."/".$file, FTP_BINARY); // put the files
+ 				ftp_chmod($conn_id, 0777, $dst_dir."/".$file);
+ 			}
+ 		}
+ 	}
+ 	$d->close();
+ }
+ 
+ function pawps_mksubdirs($ftpcon, $ftpbasedir, $ftpath){
+ 	
+ 	$homeParts = explode('/', $ftpbasedir);
+ 	$subDirs = ftp_nlist($ftpcon, ".");
+ 	$found = false;
+ 	foreach ($subDirs as $dir) {
+ 		if (!isset($newBase)) {
+	 		foreach ($homeParts as $part) {
+	 			if ($dir == $part) {
+	 				$found = true;
+	 				$newBase = "";
+	 			}
+	 			
+	 			if ($found) {
+	 				$newBase .= $part . "/";
+	 			}
+	 		}
+ 		}
+ 	}
+ 	@ftp_chdir($ftpcon, $newBase); // /var/www/uploads
+ 	 	
+ 	$parts = explode('/',$ftpath); // 2013/06/11/username
+ 	foreach($parts as $part){
+ 		if(!@ftp_chdir($ftpcon, $part)){
+ 			ftp_mkdir($ftpcon, $part);
+ 			ftp_chdir($ftpcon, $part);
+ 		}
+ 	}
+ 	
+ 	return $newBase;
+ }
+ 
+ 
  // Methode um taegliche Aktualisierung durchzufuehren
  function pawps_refresh_daily() {
  	pawps_refreshShootings();
