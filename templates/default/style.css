@@ -1,0 +1,14 @@
+.pawps_table {
+	width: 95%;
+	border: 0;
+}
+
+.pawps_image {
+	border: 1px solid #000000;
+	padding: 2px;
+}
+
+.pawps_detailImageArea {
+	width: 450px;
+	text-align: center;
+}
