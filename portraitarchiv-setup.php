@@ -1,7 +1,7 @@
 <?php
 
  function pawps_setupDatabase() {
- 	$currentDatabaseVersion = 1;
+ 	$currentDatabaseVersion = 2;
  	
  	if (get_option(PAWPS_DB_VERSION) < $currentDatabaseVersion) {
 	 	require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
@@ -60,7 +60,7 @@
 		
 		// Unterordner
 		$tableSql = 'CREATE TABLE ' . PAWPS_TABLENAME_ORDNER . ' (
-				id MEDIUMINT(8) NOT NULL,
+				id MEDIUMINT(8) NOT NULL AUTO_INCREMENT,
 				veranstaltungsid MEDIUMINT(5) NOT NULL,
 				title VARCHAR(100) NOT NULL,
 				PRIMARY KEY(ID));';

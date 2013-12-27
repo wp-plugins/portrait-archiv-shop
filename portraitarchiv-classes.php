@@ -5,7 +5,8 @@
  	
  	// TMP Values
  	var $tmpPricelist, $tmpImagelist, $tmpConfig, $tmpPreviewImage;
- 	var $tmpImgPageStart, $tmpImgPageEnd, $tmpImgPage;
+ 	var $tmpImgPageStart, $tmpImgPageEnd, $tmpImgPage, $tmpOrdner;
+ 	var $aktuellerOrdner;
  	
  	function __construct($values) {
  		$this->id = $values->id;
@@ -15,6 +16,9 @@
  		$this->pricelist_id = $values->pricelist_id;
  		$this->accesscode = $values->accesscode;
  		$this->lastupdate = $values->lastupdate;
+ 		
+ 		$alleOrdner = $this->getOrdner();
+ 		$this->aktuellerOrdner = $alleOrdner[0];
  	}
  	
  	function getPricelist() {
@@ -33,15 +37,23 @@
  		return $this->tmpPricelist;
  	}
  	
- 	function getImages() {
+ 	function getImages($onlyOrdner = false) {
  		if (!isset($this->tmpImagelist)) {
  			// Liste nicht gesetzt - versuche aus DB zu laden
- 			$imgList = pawps_loadImageListFromDb($this->id);
+ 			if ($onlyOrdner) {
+ 				$imgList = pawps_loadImageListFromDb($this->id, null, null, $this->aktuellerOrdner->id);
+ 			} else {
+ 				$imgList = pawps_loadImageListFromDb($this->id);
+ 			}
  			
  			if (!isset($imgList) || (count($imgList) == 0)) {
  				// Versuche Images von Remote zu holen
  				if (pawps_refreshImageList($this->accesscode, $this->id)) {
- 					$imgList = pawps_loadImageListFromDb($this->id);
+ 					if ($onlyOrdner) {
+ 						$imgList = pawps_loadImageListFromDb($this->id, null, null, $this->aktuellerOrdner->id);
+ 					} else {
+ 						$imgList = pawps_loadImageListFromDb($this->id);
+ 					}
  				}
  			}
  			
@@ -67,7 +79,7 @@
  			$this->tmpImgPageStart = $startIndex;
  			$this->tmpImgPageEnd = $endIndex;
  			
- 			$this->tmpImgPage = pawps_loadImageListFromDb($this->id, $startIndex, $endIndex);
+ 			$this->tmpImgPage = pawps_loadImageListFromDb($this->id, $startIndex, $endIndex, $this->aktuellerOrdner->id);
  			
  			if (!isset($this->tmpImgPage) || (count($this->tmpImgPage) == 0)) {
  				// Versuche Images von Remote zu holen
@@ -114,6 +126,39 @@
  	
  	function getShootingConfig() {
  		return pawps_loadShootingConfig(null, $this->accesscode);
+ 	}
+ 	
+ 	function getOrdnerCount() {
+ 		return count($this->getOrdner());
+ 	}
+ 	
+ 	function getOrdner() {
+ 		if (!isset($this->tmpOrdner)) {
+ 			$this->tmpOrdner = array();
+ 			
+ 			global $wpdb;
+ 			
+ 			$sql = "SELECT * FROM " . PAWPS_TABLENAME_ORDNER . " WHERE veranstaltungsid =" . $this->id;
+ 			$sql .= " ORDER BY title";
+ 			
+ 			$results = $wpdb->get_results($sql);
+
+ 			foreach ($results as $ordner) {
+ 				array_push($this->tmpOrdner, new pawps_ordner($ordner));
+ 			}
+ 		}
+ 		
+ 		return $this->tmpOrdner;
+ 	}
+ }
+ 
+ class pawps_ordner {
+ 	var $id, $shootingId, $title;
+ 	
+ 	function __construct($values) {
+ 		$this->id = $values->id;
+ 		$this->shootingId = $values->veranstaltungsid;
+ 		$this->title = $values->title;
  	}
  }
  
@@ -254,7 +299,7 @@
  }
  
  class pawps_image {
- 	var $id, $veranstaltungsid, $detailUrl, $thumbUrl, $baseUrl;
+ 	var $id, $veranstaltungsid, $detailUrl, $thumbUrl, $baseUrl, $ordnerId;
  	
  	function __construct($values) {
  		$this->id = $values->id;
@@ -262,12 +307,14 @@
  		$this->detailUrl = $values->detailUrl;
  		$this->thumbUrl = $values->thumbUrl;
  		$this->baseUrl = $values->baseUrl;
+ 		$this->ordnerId = $values->ordnerId;
  	}
  	
  	function isFirst() {
  		global $wpdb;
  		$sql = "SELECT MIN(id) FROM " . PAWPS_TABLENAME_IMAGES . " WHERE ";
  		$sql .= "veranstaltungsid=" . $this->veranstaltungsid;
+ 		$sql .= " AND ordnerId=" . $this->ordnerId;
  		$minId = $wpdb->get_var($sql);
  		return $this->id == $minId;
  	}
@@ -276,6 +323,7 @@
  		global $wpdb;
  		$sql = "SELECT MAX(id) FROM " . PAWPS_TABLENAME_IMAGES . " WHERE ";
  		$sql .= "veranstaltungsid=" . $this->veranstaltungsid;
+ 		$sql .= " AND ordnerId=" . $this->ordnerId;
  		$maxId = $wpdb->get_var($sql);
  		return $this->id == $maxId;
  	}
@@ -284,6 +332,7 @@
  		global $wpdb;
  		$sql = "SELECT id FROM " . PAWPS_TABLENAME_IMAGES . " WHERE ";
  		$sql .= "veranstaltungsid=" . $this->veranstaltungsid;
+ 		$sql .= " AND ordnerId=" . $this->ordnerId;
  		$sql .= " AND id <" . $this->id;
  		$sql .= " ORDER BY id DESC";
  		$sql .= " LIMIT 0,1";
@@ -294,6 +343,7 @@
  		global $wpdb;
  		$sql = "SELECT id FROM " . PAWPS_TABLENAME_IMAGES . " WHERE ";
  		$sql .= "veranstaltungsid=" . $this->veranstaltungsid;
+ 		$sql .= " AND ordnerId=" . $this->ordnerId;
  		$sql .= " AND id >" . $this->id;
  		$sql .= " ORDER BY id ASC";
  		$sql .= " LIMIT 0,1";

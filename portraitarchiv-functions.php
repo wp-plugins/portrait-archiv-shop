@@ -283,7 +283,7 @@
  				array(
  						'id' => $jsonImg->id,
  						'veranstaltungsid' => $technicalId,
- 						'ordnerId' => -1,
+ 						'ordnerId' => pawps_getOrdnerId($technicalId, urldecode($jsonImg->ordner)),
  						'baseUrl' => $jsonImg->baseUrl,
  						'detailUrl' => $jsonImg->detailUrl,
  						'thumbUrl' => $jsonImg->thumbUrl
@@ -293,10 +293,38 @@
  	return true;
  }
  
- function pawps_loadImageListFromDb($technicalId, $startIndex = null, $endIndex = null) {
+ function pawps_getOrdnerId($veranstaltungId, $ordnerName) {
+ 	global $wpdb;
+ 	
+ 	unset($storedName);
+ 	
+ 	$sql = "SELECT id FROM " . PAWPS_TABLENAME_ORDNER . " WHERE veranstaltungsid=" . $veranstaltungId . " AND title='" . $ordnerName . "'";
+ 	$storedName = $wpdb->get_var($sql);
+ 	
+ 	if (isset($storedName) && ($storedName > 0)) {
+ 		return $storedName;
+ 	}
+ 	
+ 	// Ordner liegt noch nicht vor -> anlegen
+ 	$wpdb->insert(
+ 			PAWPS_TABLENAME_ORDNER,
+ 			array(
+ 					'veranstaltungsid' => $veranstaltungId,
+ 					'title' => $ordnerName
+ 			));
+ 	
+ 	$ordnerId = $wpdb->insert_id;
+ 	return $ordnerId;
+ }
+ 
+ function pawps_loadImageListFromDb($technicalId, $startIndex = null, $endIndex = null, $ordnerId = null) {
  	global $wpdb;
  	
  	$sql = "SELECT * FROM " . PAWPS_TABLENAME_IMAGES . " WHERE veranstaltungsid=" . $technicalId;
+ 	
+ 	if (isset($ordnerId)) {
+ 		$sql .= " AND ordnerId=" . $ordnerId;
+ 	}
  	
  	$sql .= " ORDER BY id";
  	
@@ -424,6 +452,19 @@
  	}
  	
  	return "";
+ }
+ 
+ function pawps_loadOrdnerById($id) {
+ 	global $wpdb;
+ 	
+ 	$sql = "SELECT * FROM " . PAWPS_TABLENAME_ORDNER . " WHERE id =" . $id;
+ 	$results = $wpdb->get_results($sql);
+ 	
+ 	foreach ($results as $ordner) {
+ 		return new pawps_ordner($ordner);
+ 	}
+ 	
+ 	return null;
  }
  
  function pawps_doDebug($debugMessage) {

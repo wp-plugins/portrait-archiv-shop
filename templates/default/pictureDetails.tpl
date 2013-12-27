@@ -2,15 +2,15 @@
 		<tr>
 			<td align="left" width="25%">
 				<?php if (!$image->isFirst()) { ?>
-					<a href='<?php echo add_query_arg ('pDetails', $image->getPreviousId()); ?>' title='vorheriges Bild anzeigen'><img src='<?php echo plugins_url( 'resources/previous.png' , __FILE__ ); ?>' border='0' height='30px' width='30px' /></a>
+					<a href='<?php echo add_query_arg (array('pDetails' => $image->getPreviousId(), 'pawps_ordner' => $shooting->aktuellerOrdner->id)); ?>' title='vorheriges Bild anzeigen'><img src='<?php echo plugins_url( 'resources/previous.png' , __FILE__ ); ?>' border='0' height='30px' width='30px' /></a>
 				<?php } ?>
 			</td>
 			<td align="center">
-					<a href='<?php echo add_query_arg ('pDetails'); ?>' title='zurueck zur Uebersicht'><img src='<?php echo plugins_url( 'resources/up.png' , __FILE__ ); ?>' border='0' height='30px' width='30px' /></a>
+					<a href='<?php echo add_query_arg (array('pDetails' => null, 'pawps_ordner' => $shooting->aktuellerOrdner->id)); ?>' title='zurueck zur Uebersicht'><img src='<?php echo plugins_url( 'resources/up.png' , __FILE__ ); ?>' border='0' height='30px' width='30px' /></a>
 			</td>
 			<td align="right" width="25%">
 				<?php if (!$image->isLast()) { ?>
-					<a href='<?php  echo add_query_arg ('pDetails', $image->getNextId()); ?>' title='naechstes Bild anzeigen'><img src='<?php  echo plugins_url( 'resources/next.png' , __FILE__ ); ?>' border='0' height='30px' width='30px' /></a>
+					<a href='<?php  echo add_query_arg (array('pDetails' => $image->getNextId(), 'pawps_ordner' => $shooting->aktuellerOrdner->id)); ?>' title='naechstes Bild anzeigen'><img src='<?php  echo plugins_url( 'resources/next.png' , __FILE__ ); ?>' border='0' height='30px' width='30px' /></a>
 				<?php } ?>
 			</td>
 		</tr>

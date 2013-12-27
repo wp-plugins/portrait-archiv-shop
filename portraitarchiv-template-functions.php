@@ -181,6 +181,13 @@
  		}
  	}
  	
+ 	// Prüfe ob Ordner-ID übergeben wurde -> falls ja setzen
+ 	if (isset($_POST['pawps_ordner'])) {
+ 		$shooting->aktuellerOrdner = pawps_loadOrdnerById($_POST['pawps_ordner']);
+ 	} else if (isset($_GET['pawps_ordner'])) {
+ 		$shooting->aktuellerOrdner = pawps_loadOrdnerById($_GET['pawps_ordner']);
+ 	}
+ 	
  	// Shooting - Config und Image da - Anzeigen
  	pawps_showHeader($shooting->title, true, $error, $message);
 	require pawps_getTemplatePath('pictureDetails');
@@ -246,10 +253,18 @@
 		$imagesPerPage = $displayCols * $displayRows;
 		$requestedEndIndex = $currentStartIndex + $imagesPerPage;
 		
+		// Prüfe ob Ordner-ID übergeben wurde -> falls ja setzen
+		if (isset($_POST['pawps_ordner'])) {
+			$shooting->aktuellerOrdner = pawps_loadOrdnerById($_POST['pawps_ordner']);
+		} else if (isset($_GET['pawps_ordner'])) {
+			$shooting->aktuellerOrdner = pawps_loadOrdnerById($_GET['pawps_ordner']);
+		}
+		
 		$images = $shooting->getImagePage($currentStartIndex, $requestedEndIndex);
 		
 		// Template anzeigen
 		pawps_showHeader($shooting->title, TRUE, $error, $message);
+		
 		require pawps_getTemplatePath ('event');
 	} else {
 		$noEntriesMessage = "Das gewünschte Element kann leider nicht angezeigt werden";
