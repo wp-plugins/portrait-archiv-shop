@@ -576,4 +576,18 @@
  	pawps_refreshShootings();
  }
  
+ // SystemCheck Function
+ function pawps_syscheck() {
+ 	return pawps_syscheck_urlFopen() || pawps_syscheck_curl();
+ }
+ 
+ function pawps_syscheck_urlFopen() {
+ 	// return ini_get('allow_url_fopen') == true;
+ 	return false;
+ }
+ 
+ function pawps_syscheck_curl() {
+ 	return function_exists('curl_init');
+ }
+ 
 ?>

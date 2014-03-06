@@ -59,6 +59,9 @@ Menüpunkt 'Gallerien'.
 5. Eingegangene Bestellungen werden zur Kontrolle in Ihrem Adminbereich angezeigt
 
 == Changelog ==
+= 1.6 =
+* Fallbacklösung falls Serverkonfiguration Remotezugriff nicht erlaubt
+
 = 1.5 =
 * Anzeige der Gallerien mit Unterordnern ermöglicht
 
