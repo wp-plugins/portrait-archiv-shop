@@ -17,47 +17,58 @@
 		'pawps_admin_menu_anleitung',
 		'pawps_admin_menu_anleitung');
 	
-	if (!pawps_isConnectionWorking() && pawps_isAnmeldeWsEnabled()) {
+	if (pawps_syscheck()) {
+		if (!pawps_isConnectionWorking() && pawps_isAnmeldeWsEnabled()) {
+			add_submenu_page(
+				'pawps_admin_menu_mainpage',
+				'Portrait-Archiv.com Anmeldung',
+				'Anmeldung',
+				'manage_options',
+				'pawps_admin_menu_anmeldung',
+				'pawps_admin_menu_anmeldung');
+		}
+			
 		add_submenu_page(
 			'pawps_admin_menu_mainpage',
-			'Portrait-Archiv.com Anmeldung',
-			'Anmeldung',
+			'Portrait-Archiv.com Verbindungsdaten',
+			'Verbindungsdaten',
 			'manage_options',
-			'pawps_admin_menu_anmeldung',
-			'pawps_admin_menu_anmeldung');
+			'pawps_admin_menu_grundeinstellungen',
+			'pawps_admin_menu_grundeinstellungen');
+		
+		add_submenu_page(
+			'pawps_admin_menu_mainpage',
+			'Portrait-Archiv.com Design',
+			'Design',
+			'manage_options',
+			'pawps_admin_menu_template',
+			'pawps_admin_menu_template');
+		
+		add_submenu_page(
+			'pawps_admin_menu_mainpage',
+			'Übersicht der Gallerien',
+			'Gallerien',
+			'manage_options',
+			'pawps_admin_menu_shootings',
+			'pawps_admin_menu_shootings');
+			
+		add_submenu_page(
+			'pawps_admin_menu_mainpage',
+			'Übersicht der Bestellungen',
+			'Bestellungen',
+			'manage_options',
+			'pawps_admin_menu_orders',
+			'pawps_admin_menu_orders');
+	} else {
+		// Systemchecks fehlerhaft -> zeige Systemübersicht
+		add_submenu_page(
+			'pawps_admin_menu_mainpage',
+			'Überprüfung der Systemkonfiguration',
+			'Systemüberprüfung',
+			'manage_options',
+			'pawps_admin_syscheck_overview',
+			'pawps_admin_syscheck_overview');
 	}
-		
-	add_submenu_page(
-		'pawps_admin_menu_mainpage',
-		'Portrait-Archiv.com Verbindungsdaten',
-		'Verbindungsdaten',
-		'manage_options',
-		'pawps_admin_menu_grundeinstellungen',
-		'pawps_admin_menu_grundeinstellungen');
-	
-	add_submenu_page(
-		'pawps_admin_menu_mainpage',
-		'Portrait-Archiv.com Design',
-		'Design',
-		'manage_options',
-		'pawps_admin_menu_template',
-		'pawps_admin_menu_template');
-	
-	add_submenu_page(
-		'pawps_admin_menu_mainpage',
-		'Übersicht der Gallerien',
-		'Gallerien',
-		'manage_options',
-		'pawps_admin_menu_shootings',
-		'pawps_admin_menu_shootings');
-		
-	add_submenu_page(
-		'pawps_admin_menu_mainpage',
-		'Übersicht der Bestellungen',
-		'Bestellungen',
-		'manage_options',
-		'pawps_admin_menu_orders',
-		'pawps_admin_menu_orders');
 	
 // 	add_submenu_page(
 // 		'pawps_admin_menu_mainpage',
@@ -1225,5 +1236,49 @@
 			?>
 		</div>
 		<?php 
+  }
+  
+  function pawps_admin_syscheck_overview() {
+  	pawps_showAdminHeader("Überprüfung der Systemkonfiguration");
+  
+  	if ( !current_user_can( 'manage_options' ) )  {
+  		wp_die( __( 'Ihre aktuelle Berechtigung verhindert den Zugriff auf diese Seite' ) );
+  	}
+  	
+  	?>
+  		<div class="wrap">
+  			Damit das Portrait-Archiv.com Shopmodul vollständig funktioniert sind einige Voraussetzungen zu erfüllen. Bei der 
+  			Prüfung Ihres Systemes ist aufgefallen, dass nicht alle notwendigen Voraussetzungen erfüllt sind und das Modul somit 
+  			nicht lauffähig ist. Bitte überprüfen Sie die folgenden Parameter:
+  			
+  			<h3>Verbindungseinstellungen</h3>
+  			Damit Ihre Internetseite eine Verbindung zu Portrait-Archiv.com herstellen kann ist es notwendig, dass eine der
+  			beiden folgenden Module aktiviert ist. Diese Aktivierung kann in der Regel nur durch Ihren Webhoster vorgenommen werden:
+  			
+  			<table class="wp-list-table widefat fixed pages" cellspacing="0">
+				<thead>
+					<tr>
+						<th scope='col' width='50px'>Status;</th>
+						<th scope='col' width='200px'>Modul-Name</th>
+						<th scope='col'>Beschreibung</th>
+					</tr>
+				</thead>
+				<tbody id="the-list">
+					<tr valign="top">
+						<td><?php if (pawps_syscheck_urlFopen()) { echo "OK"; } else { echo "Fehler"; }?></td>
+						<td><a href="http://www.php.net/manual/de/filesystem.configuration.php#ini.allow-url-fopen" target="_blank">url_fopen</a></td>
+						<td>Diese Option aktiviert URL-unterstützende fopen()-Wrapper, die es ermöglichen, auf URL-Objekte wie normale Dateien zuzugreifen. Standardwrapper werden für den Zugriff auf entfernte Dateien über das FTP- und HTTP-Protokoll mitgeliefert.</td>
+					</tr>
+					<tr valign="top">
+						<td><?php if (pawps_syscheck_curl()) { echo "OK"; } else { echo "Fehler"; }?></td>
+						<td><a href="http://de3.php.net/manual/de/curl.requirements.php"target="_blank">cURL</a></td>
+						<td>Um cURL Funktionen nutzen zu können, muss man das » cURL-Paket installieren. PHP fordert cURL 7.0.2-beta oder neuer. Mit einer älteren Version als 7.0.2-beta wird PHP nicht funktionieren. In PHP 4.2.3, wird cURL in der Version 7.9.0 oder höher vorausgesetzt. Bei PHP 4.3.0, wird die cURL Version 7.9.8 oder höher benötigt. PHP 5.0.0 wird wahrscheinlich eine cURL Version neuer als 7.10.5 voraussetzen. </td>
+					</tr>
+				</tbody>
+			</table>
+			
+			Verbindungseinstellung: <b><?php if (pawps_syscheck_urlFopen() || pawps_syscheck_curl()) { echo "Lauffähig"; } else { echo "Fehlerhaft"; } ?></b><br/>		
+  		</div>
+  	<?php 
   }
 ?>

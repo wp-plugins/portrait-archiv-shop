@@ -1,6 +1,9 @@
 <?php
 
  function pawps_isConnectionWorking() {
+ 	if (!pawps_syscheck()) {
+ 		return false;
+ 	}
  	return pawps_readRemoteUrl("getLastUpdateTime") != "keine Berechtigung";
  }
  
@@ -9,7 +12,8 @@
  }
  
  function pawps_isAnmeldeWsEnabled() {
- 	$content = file_get_contents(PAWPS_BASE_URL . "/ws/isAnmeldungAktiv.php");
+ 	// $content = file_get_contents(PAWPS_BASE_URL . "/ws/isAnmeldungAktiv.php");
+ 	$content = pawps_justReadRemote(PAWPS_BASE_URL . "/ws/isAnmeldungAktiv.php");
  	
  	if ($content == "1") {
  		return true;
@@ -23,11 +27,8 @@
  	$url = PAWPS_BASE_URL . "/ws/createFotograf.php?anmeldedaten=";
  	$url .= json_encode($anmeldedaten);
  	
- 	pawps_doDebug ("URL: " . $url);
- 	
- 	$result = file_get_contents($url);
- 	
- 	pawps_doDebug ("Result: " . $result);
+ 	// $result = file_get_contents($url);
+ 	$result = pawps_justReadRemote($url);
  	
  	return $result;
  }
@@ -64,7 +65,19 @@
  function pawps_justReadRemote($url) {
  	pawps_doDebug ("URL: " . $url);
  	
- 	$content = file_get_contents($url);
+ 	if (pawps_syscheck_urlFopen()) {
+ 		pawps_doDebug ("Lese über fopen");
+ 		$content = file_get_contents($url);
+ 	} else if (pawps_syscheck_curl()) {
+ 		pawps_doDebug ("Lese über curl");
+ 		$curl = curl_init($url);
+ 		curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+ 		$content = curl_exec($curl);
+ 		curl_close($curl);
+ 	} else {
+ 		pawps_doDebug ("Removerbindung kann nicht hergestellt werden");
+ 		throw new Exception('Remoteverbindung kann nicht hergestellt werden');
+ 	}
  	
  	pawps_doDebug ("Result: " . $content);
  	
