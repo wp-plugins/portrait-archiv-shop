@@ -582,8 +582,7 @@
  }
  
  function pawps_syscheck_urlFopen() {
- 	// return ini_get('allow_url_fopen') == true;
- 	return false;
+ 	return ini_get('allow_url_fopen') == true;
  }
  
  function pawps_syscheck_curl() {
