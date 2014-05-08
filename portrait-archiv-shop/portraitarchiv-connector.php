@@ -156,7 +156,7 @@
  		}
  		
  		$message .= $customer->name . ", " . $customer->firstname . "\n";
- 		$message .= $customer->street . "\n";
+ 		$message .= $customer->street . ", " . $customer->number . "\n";
  		$message .= $customer->plz . ", " . $customer->city . "\n";
  		$message .= $customer->country . "\n";
  		$message .= "E-Mail: " . $customer->email . "\n\n";
@@ -164,7 +164,7 @@
  		if ($eigeneVersandadresse) {
  			$message = "Lieferadresse:\n";
  			$message .= $customer->ver_name . ", " . $customer->ver_firstname . "\n";
- 			$message .= $customer->ver_street . "\n";
+ 			$message .= $customer->ver_street . ", " . $customer->ver_number ."\n";
  			$message .= $customer->ver_plz . ", " . $customer->ver_city . "\n";
  			$message .= $customer->ver_country . "\n\n";
  		}
