@@ -7,9 +7,10 @@
 						</td>
 					</tr>
 					<tr>
-						<td>Strasse:</td>
+						<td>Strasse, Nr:</td>
 						<td>
 							<input type="text" name="street" size="40" maxlength="50" value="<?php echo $street; ?>" />
+							<input type="text" name="number" size="8" maxlength="6" value="<?php echo $number; ?>" />
 						</td>
 					</tr>
 					<tr>
