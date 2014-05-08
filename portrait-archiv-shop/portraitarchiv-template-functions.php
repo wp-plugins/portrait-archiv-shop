@@ -314,6 +314,7 @@
 			$error = pawps_validateField($_POST['lastname'], "Name");
 			$error .= pawps_validateField($_POST['firstname'], "Vorname");
 			$error .= pawps_validateField($_POST['street'], "Strasse");
+			$error .= pawps_validateField($_POST['number'], "Hausnummer");
 			$error .= pawps_validateField($_POST['plz'], "Plz");
 			$error .= pawps_validateField($_POST['ort'], "Ort");
 			$error .= pawps_validateField($_POST['email'], "E-Mail");
@@ -328,6 +329,7 @@
 								'name' => $_POST['lastname'],
 								'firstname' => $_POST['firstname'],
 								'street' => $_POST['street'],
+								'number' => $_POST['number'],
 								'plz' => $_POST['plz'],
 								'city' => $_POST['ort'],
 								'country' => pawps_getLandbezeichnung($_POST['land'])
@@ -362,6 +364,7 @@
 				$name = $_POST['lastname'];
 				$firstname = $_POST['firstname'];
 				$street = $_POST['street'];
+				$number = $_POST['number'];
 				$plz = $_POST['plz'];
 				$city = $_POST['ort'];
 				$landId = $_POST['land'];
@@ -371,6 +374,7 @@
 			$error = pawps_validateField($_POST['lastname'], "Name");
 			$error .= pawps_validateField($_POST['firstname'], "Vorname");
 			$error .= pawps_validateField($_POST['street'], "Strasse");
+			$error .= pawps_validateField($_POST['number'], "Hausnummer");
 			$error .= pawps_validateField($_POST['plz'], "Plz");
 			$error .= pawps_validateField($_POST['ort'], "Ort");
 			
@@ -383,6 +387,7 @@
 								'ver_name' => $_POST['lastname'],
 								'ver_firstname' => $_POST['firstname'],
 								'ver_street' => $_POST['street'],
+								'ver_number' => $_POST['number'],
 								'ver_plz' => $_POST['plz'],
 								'ver_city' => $_POST['ort'],
 								'ver_country' => pawps_getLandbezeichnung($_POST['land'])
@@ -398,6 +403,7 @@
 				$name = $_POST['lastname'];
 				$firstname = $_POST['firstname'];
 				$street = $_POST['street'];
+				$number = $_POST['number'];
 				$plz = $_POST['plz'];
 				$city = $_POST['ort'];
 				$landId = $_POST['land'];
