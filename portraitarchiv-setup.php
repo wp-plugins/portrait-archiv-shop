@@ -1,7 +1,7 @@
 <?php
 
  function pawps_setupDatabase() {
- 	$currentDatabaseVersion = 2;
+ 	$currentDatabaseVersion = 3;
  	
  	if (get_option(PAWPS_DB_VERSION) < $currentDatabaseVersion) {
 	 	require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
@@ -122,15 +122,17 @@
 				name varchar(30) NOT NULL,
 				firstname varchar(30) NOT NULL,
 				street varchar(50) NOT NULL,
+				number varchar(6),
 				plz varchar(6) NOT NULL,
 				city varchar(40) NOT NULL,
 				country varchar(50) NOT NULL,
 				ver_name varchar(30),
 				ver_firstname varchar(30),
 				ver_street varchar(50),
+				ver_number varchar(6),
 				ver_plz varchar(6),
 				ver_city varchar(40),
-				ver_country varchar(50),
+				ver_country varchar(50),				
 				PRIMARY KEY(id));';
 		dbDelta( $tableSql );
 		
