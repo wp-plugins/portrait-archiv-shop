@@ -671,8 +671,8 @@
  }
  
  class pawps_customer {
- 	var $id, $email, $name, $firstname, $street, $plz, $city, $country, $ver_name, 
- 		$ver_firstname, $ver_street, $ver_plz, $ver_city, $ver_country;
+ 	var $id, $email, $name, $firstname, $street, $number, $plz, $city, $country, $ver_name, 
+ 		$ver_firstname, $ver_street, $ver_number, $ver_plz, $ver_city, $ver_country;
  	
  	function __construct($data) {
  		$this->id = $data->id;
@@ -680,15 +680,17 @@
  		$this->name = $data->name;
  		$this->firstname = $data->firstname;
  		$this->street = $data->street;
+ 		$this->number = $data->number;
  		$this->plz = $data->plz;
  		$this->city = $data->city;
  		$this->country = $data->country;
  		$this->ver_name = $data->ver_name;
  		$this->ver_firstname = $data->ver_firstname;
  		$this->ver_street = $data->ver_street;
+ 		$this->ver_number = $data->ver_number;
  		$this->ver_plz = $data->ver_plz;
  		$this->ver_city = $data->ver_city;
- 		$this->ver_country = $data->ver_country;
+ 		$this->ver_country = $data->ver_country; 		
  	}
  }
  
@@ -724,12 +726,14 @@
 	 			$customer->plz = urlencode($customer->plz);
 	 			$customer->city = urlencode($customer->city);
 	 			$customer->country = urlencode($customer->country);
+	 			$customer->number = urlencode($customer->number);
 	 			$customer->ver_name = urlencode($customer->ver_name);
 	 			$customer->ver_firstname = urlencode($customer->ver_firstname);
 	 			$customer->ver_street = urlencode($customer->ver_street);
 	 			$customer->ver_plz = urlencode($customer->ver_plz);
 	 			$customer->ver_city = urlencode($customer->ver_city);
 	 			$customer->ver_country = urlencode($customer->ver_country);
+	 			$customer->ver_number = urlencode($customer->ver_number);
 	 			
 	 			$this->customer = $customer;
 	 		}
