@@ -651,8 +651,8 @@
 
 	if (isset($_POST['grundeinstellungSubmit'])) {
 		// Einstellungen übernehmen
-		$paHashRemote = $_POST['PA_HASHKEY_REMOTE'];
-		$paUserId = $_POST['PA_USERID'];
+		$paHashRemote = trim($_POST['PA_HASHKEY_REMOTE']);
+		$paUserId = trim($_POST['PA_USERID']);
 		
 		update_option(PAWPS_OPTION_HASHKEY_REMOTE, $paHashRemote );
 		update_option(PAWPS_OPTION_USERID, $paUserId);
