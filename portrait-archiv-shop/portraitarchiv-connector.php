@@ -44,7 +44,7 @@
  
  	// Build URL
  	$url = PAWPS_BASE_URL . "wpshop/" . $scriptName . ".php?";
- 	$url .= "id=" . $paUserId . "&hash=" . $paHash . "&rhash=" . $paHashRemote;
+ 	$url .= "id=" . trim($paUserId) . "&hash=" . trim($paHash) . "&rhash=" . trim($paHashRemote);
  	$url .= "&wpUrl=" . urlencode(site_url());
  	 
  	if (isset($paramString)) {
