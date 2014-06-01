@@ -443,7 +443,7 @@
 	 			foreach ($this->positionen as $position) {
 	 				$position->calculated = false;
 	 				$position->calculatePrices();
-	 				$this->betrag = $this->betrag + $position->getBetrag();
+	 				$this->betrag = $this->betrag + $position->getBetrag(false);
 	 			}
  			}
  		} else {
@@ -547,7 +547,7 @@
  		foreach ($this->positionen as $position) {
  			$position->calculated = false;
  			$position->calculatePrices();
- 			$this->betrag = $this->betrag + $position->getBetrag();
+ 			$this->betrag = $this->betrag + $position->getBetrag(false);
  		}
  	}
  	
