@@ -4,7 +4,7 @@ Tags: Portrait-Archiv, Store, Onlineshop, Shop, Foto, Bild
 Donate link: http://www.Portrait-Service.com
 Requires at least: 3.0.1
 Tested up to: 3.9
-Stable tag: 1.6.3
+Stable tag: 1.6.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -59,6 +59,9 @@ Menüpunkt 'Gallerien'.
 5. Eingegangene Bestellungen werden zur Kontrolle in Ihrem Adminbereich angezeigt
 
 == Changelog ==
+= 1.6.4 = 
+* kleiner Bugfix bei Rundungen im Warenkorb
+
 = 1.6.2 = 
 * kleiner Bugfix bei CURL Verbindungen
 
