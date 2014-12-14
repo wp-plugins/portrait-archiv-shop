@@ -306,7 +306,7 @@
  		$this->veranstaltungsid = $values->veranstaltungsid;
  		$this->detailUrl = $values->detailUrl;
  		$this->thumbUrl = $values->thumbUrl;
- 		$this->baseUrl = $values->baseUrl;
+ 		$this->subDir = $values->subDir;
  		$this->ordnerId = $values->ordnerId;
  	}
  	
@@ -351,11 +351,11 @@
  	}
  	
  	function getThumbUrl() {
- 		return urldecode($this->baseUrl . "/" . $this->thumbUrl);
+ 		return urldecode(PAWPS_IMAGE_BASE_URL . "/" . $this->subDir . "/" . $this->thumbUrl);
  	}
  	
  	function getDetailUrl() {
- 		return urldecode($this->baseUrl . "/" . $this->detailUrl);
+ 		return urldecode(PAWPS_IMAGE_BASE_URL . "/" . $this->subDir . "/" . $this->detailUrl);
  	}
  }
  

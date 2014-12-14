@@ -284,7 +284,7 @@
  						'id' => $jsonImg->id,
  						'veranstaltungsid' => $technicalId,
  						'ordnerId' => pawps_getOrdnerId($technicalId, urldecode($jsonImg->ordner)),
- 						'baseUrl' => $jsonImg->baseUrl,
+ 						'subDir' => $jsonImg->subDir,
  						'detailUrl' => $jsonImg->detailUrl,
  						'thumbUrl' => $jsonImg->thumbUrl
  				));
