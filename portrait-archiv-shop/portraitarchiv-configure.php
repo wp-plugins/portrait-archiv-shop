@@ -33,6 +33,7 @@
  define ('PAWPS_USERTPL_START', 'eigeneVorlage-');
  
  // Umgebungsinfo
- define ('PAWPS_BASE_URL', 'https://www.portrait-archiv.com/');
+ define ('PAWPS_BASE_URL', 'http://old.portrait-archiv.com/');
+ define ('PAWPS_IMAGE_BASE_URL', 'http://images.portrait-archiv.com');
  
 ?>

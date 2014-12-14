@@ -1,7 +1,17 @@
 <?php
 
  function pawps_setupDatabase() {
- 	$currentDatabaseVersion = 3;
+ 	$currentDatabaseVersion = 4;
+ 	
+ 	$updateDone = false;
+ 	
+ 	if (get_option(PAWPS_DB_VERSION) < 4) {
+ 		// Images-Table löschen
+ 		global $wpdb;
+ 		$wpdb->query('DROP TABLE ' . PAWPS_TABLENAME_IMAGES);
+ 		$wpdb->query('DELETE FROM ' . PAWPS_TABLENAME_SHOOTINGS);
+ 		$wpdb->query('DELETE FROM ' . PAWPS_TABLENAME_ORDNER);
+ 	}
  	
  	if (get_option(PAWPS_DB_VERSION) < $currentDatabaseVersion) {
 	 	require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
@@ -71,7 +81,7 @@
 				id MEDIUMINT(8) NOT NULL,
 				veranstaltungsid MEDIUMINT(5) NOT NULL,
 				ordnerId MEDIUMINT(8) NOT NULL,
-				baseUrl VARCHAR(100) NOT NULL,
+				subDir VARCHAR(100) NOT NULL,
 				detailUrl VARCHAR(20) NOT NULL,
 				thumbUrl VARCHAR(20) NOT NULL,
 				PRIMARY KEY(ID));';	
@@ -138,6 +148,22 @@
 		
 		// aktuelle Version in DB eintragen
 		update_option(PAWPS_DB_VERSION, $currentDatabaseVersion);
+		
+
+		// Prüfe Modul-Token
+		$paHash = get_option(PAWPS_OPTION_HASHKEY);
+		$paHashRemote = get_option(PAWPS_OPTION_HASHKEY_REMOTE);
+		$paUserId = get_option(PAWPS_OPTION_USERID);
+		
+		if ((strlen($paHash) > 0) && (strlen($paUserId) > 0)) {
+			// alte Daten gespeichert - prüfe ob noch korrekt
+			$currentRemoteHash = pawps_getModuleToken();
+			if ($paHash != $currentRemoteHash) {
+				// Hash hat sich geändert -> aktualisieren
+				update_option(PAWPS_OPTION_HASHKEY, $currentRemoteHash);
+				delete_option(PAWPS_OPTION_HASHKEY_REMOTE);
+			}
+		}
  	}
  }
  

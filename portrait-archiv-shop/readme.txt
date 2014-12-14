@@ -3,8 +3,8 @@ Contributors: Thomas Schiffler
 Tags: Portrait-Archiv, Store, Onlineshop, Shop, Foto, Bild
 Donate link: http://www.Portrait-Service.com
 Requires at least: 3.0.1
-Tested up to: 3.9
-Stable tag: 1.6.4
+Tested up to: 4.0.1
+Stable tag: 1.7
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -59,6 +59,9 @@ Menüpunkt 'Gallerien'.
 5. Eingegangene Bestellungen werden zur Kontrolle in Ihrem Adminbereich angezeigt
 
 == Changelog ==
+= 1.7 =
+* erste Vorbereitungen für Relaunch von Portrait-Archiv.com
+
 = 1.6.4 = 
 * kleiner Bugfix bei Rundungen im Warenkorb
 
