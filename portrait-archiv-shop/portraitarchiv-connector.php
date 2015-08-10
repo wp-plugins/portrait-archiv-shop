@@ -4,30 +4,22 @@
  	if (!pawps_syscheck()) {
  		return false;
  	}
- 	return pawps_readRemoteUrl("getLastUpdateTime") != "keine Berechtigung";
+ 	
+ 	$result = pawps_readRemoteUrl("ws/public/galerieService/lastGalerieUpdateTime");
+ 	
+ 	return  $result->{'success'} == true;
  }
  
  function pawps_getModuleToken() {
- 	return pawps_readRemoteUrl("getModuleToken");
- }
- 
- function pawps_isAnmeldeWsEnabled() {
- 	// $content = file_get_contents(PAWPS_BASE_URL . "/ws/isAnmeldungAktiv.php");
- 	$content = pawps_justReadRemote(PAWPS_BASE_URL . "/ws/isAnmeldungAktiv.php");
- 	
- 	if ($content == "1") {
- 		return true;
- 	}
- 	
- 	// ansonsten ned
- 	return false; 	
+ 	return pawps_readRemoteUrl("ws/public/userService/getModulToken")->{'token'};
  }
  
  function pawps_doAnmeldung($anmeldedaten) {
- 	$url = PAWPS_BASE_URL . "/ws/createFotograf.php?anmeldedaten=";
+ 	$url = PAWPS_BASE_URL . "ws/public/userService/createFotograf?customerData=";
  	$url .= json_encode($anmeldedaten);
  	
  	// $result = file_get_contents($url);
+ 	echo $url;
  	$result = pawps_justReadRemote($url);
  	
  	return $result;
@@ -43,9 +35,9 @@
  	}
  
  	// Build URL
- 	$url = PAWPS_BASE_URL . "wpshop/" . $scriptName . ".php?";
- 	$url .= "id=" . trim($paUserId) . "&hash=" . trim($paHash) . "&rhash=" . trim($paHashRemote);
- 	$url .= "&wpUrl=" . urlencode(site_url());
+ 	$url = PAWPS_BASE_URL . $scriptName . "?";
+ 	$url .= "loginData=";
+ 	$url .= json_encode(array('id' => trim($paUserId), 'hash' => trim($paHash), 'remoteHash' => trim($paHashRemote)));
  	 
  	if (isset($paramString)) {
  		$url .= "&" . $paramString;
@@ -59,7 +51,7 @@
  	
  	$result = pawps_justReadRemote($url);
 
- 	return $result;
+ 	return json_decode($result);
  }
  
  function pawps_justReadRemote($url) {
@@ -85,30 +77,30 @@
  }
  
  function pawps_getRemoteLastUpdate() {
- 	$result = pawps_readRemoteUrl("getLastUpdateTime");
+ 	$result = pawps_readRemoteUrl("ws/public/galerieService/lastGalerieUpdateTime");
  	
- 	if (!is_numeric($result)) {
- 		return PAWPS_DEFAULT_ERROR;
+ 	if (!$result->{'success'}) {
+ 		return "FEHLER";
  	}
- 	
- 	$jResult = json_decode($result);
- 	return $jResult->lastUpdate;
+
+ 	return $result->lastUpdate;
  }
  
  function pawps_getRemoteShootingResult() {
- 	$result = pawps_readRemoteUrl("getEventlist");
+ 	$result = pawps_readRemoteUrl("ws/public/galerieService/retrieveGalerien");
  	 
  	return $result;
  }
  
  function pawps_getRemotePricelistResult($pricelistId) {
- 	$result = pawps_readRemoteUrl("getPricelist", "preisliste=" . $pricelistId);
+ 	$result = pawps_readRemoteUrl("ws/public/galerieService/retrievePricelist", "pricelistId=" . $pricelistId);
  	
  	return $result;
  }
  
  function pawps_getRemoteImageList($shootingCode) {
- 	$result = pawps_readRemoteUrl("getImagelist", "veranstaltung=" . $shootingCode);
+ 	$codeElements = split("-", $shootingCode);
+ 	$result = pawps_readRemoteUrl("ws/public/galerieService/retrieveImages", "veranstaltungId=" . $codeElements[1]);
  	
  	if ($result == "Veranstaltung nicht gefunden") {
  		return PAWPS_DEFAULT_ERROR;

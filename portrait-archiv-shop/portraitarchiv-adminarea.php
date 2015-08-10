@@ -18,7 +18,7 @@
 		'pawps_admin_menu_anleitung');
 	
 	if (pawps_syscheck()) {
-		if (!pawps_isConnectionWorking() && pawps_isAnmeldeWsEnabled()) {
+		if (!pawps_isConnectionWorking()) {
 			add_submenu_page(
 				'pawps_admin_menu_mainpage',
 				'Portrait-Archiv.com Anmeldung',
@@ -432,7 +432,12 @@
 					$anmeldedaten->homepage = urlencode($_POST['paUrl']);
 					$anmeldedaten->wpUrl = urlencode(site_url());
 					
-					$message = pawps_doAnmeldung($anmeldedaten);
+					$result = pawps_doAnmeldung($anmeldedaten);
+					if ($result == "true") {
+						$message = "Ihre Anmeldung war erfolgreich. Ihre Zugangsdaten sind bereits per Mail auf dem Weg zu Ihnen.";
+					} else {
+						$error = "Bei der Anmeldung ist ein Fehler aufgetreten";
+					}
 				}
 			}
 			

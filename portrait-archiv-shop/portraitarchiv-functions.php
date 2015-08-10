@@ -8,85 +8,80 @@
  	// hole alle Remote-Shootings
  	$remoteResult = pawps_getRemoteShootingResult();
  	
- 	if (strlen($remoteResult) > 3) {
- 		// prïüfe ob Update notwendig
+ 	if (count($remoteResult) > 0 ) {
+ 		// prüfe ob Update notwendig
  		$lastLocaleUpdate = get_option(PAWPS_LAST_UPDATE_SHOOTINGS);
  		$lastRemoteUpdate = pawps_getRemoteLastUpdate();
  		
   		$doUpdate = (((strlen($lastLocaleUpdate) > 5) && ($lastLocaleUpdate < $lastRemoteUpdate)) || (strlen($lastLocaleUpdate) < 5));
   		
   		if ($doUpdate) {
-  			// Hole Event-Liste
-		 	$jsonCompleteResult = json_decode($remoteResult);
-		 	
-		 	if (count($jsonCompleteResult) > 0) {
-		 		// Shootings gefunden -> aktualisiere lokale Datenbank
-		 		foreach ($jsonCompleteResult as $jsonResult) {
-		 			if ($jsonResult->lastUpdate > $lastLocaleUpdate) {
-		 				// letztes Update nach lokalem Update -> ï¿½nderung ï¿½bernehmen
-		 				if (($jsonResult->state == 1) && (strlen($jsonResult->title) > 0)) {
-		 					// Shooting noch aktiv -> Änderungen übernehmen
-		 					$existierendesShooting = pawps_loadShootingByData(null, $jsonResult->zugriffscode);
+		 	// Shootings gefunden -> aktualisiere lokale Datenbank
+		 	foreach ($remoteResult as $jsonResult) {
+		 		if ($jsonResult->lastUpdate > $lastLocaleUpdate) {
+		 			// letztes Update nach lokalem Update -> änderung übernehmen
+					if (($jsonResult->state == 1) && (strlen($jsonResult->title) > 0)) {
+	 					// Shooting noch aktiv -> Änderungen übernehmen
+	 					$existierendesShooting = pawps_loadShootingByData(null, $jsonResult->zugriffscode);
 		 					
-		 					// Datumsobjekt aufbauen
-		 					$datumString = date('Y-m-d H:M:s', $jsonResult->lastUpdate);
+	 					// Datumsobjekt aufbauen	
+	  					$datumString = date('Y-m-d H:M:s', $jsonResult->lastUpdate);
 		 					
-		 					// Shootingdate
-		 					$shootingDateElements = explode(".", $jsonResult->date);
-		 					$shootingDateDbFormat = $shootingDateElements[2] . "-" . $shootingDateElements[1] . "-" . $shootingDateElements[0];
+		 				// Shootingdate
+						$shootingDateElements = explode(".", $jsonResult->date);
+		 				$shootingDateDbFormat = $shootingDateElements[2] . "-" . $shootingDateElements[1] . "-" . $shootingDateElements[0];
 		 					
-		 					// Prüfe Update
-		 					if (isset($existierendesShooting)) {
-		 						// Shooting existiert -> Aktualisieren
-		 						$wpdb->update(
-		 								PAWPS_TABLENAME_SHOOTINGS,
-		 								array(
-		 										'title' => urldecode($jsonResult->title),
-		 										'imageCount' => $jsonResult->imageCount,
-		 										'shootingdate' => $shootingDateDbFormat,
-		 										'pricelist_id' => $jsonResult->preisliste,
-		 										'accesscode' => $jsonResult->zugriffscode,
-		 										'lastupdate' => $datumString
-		 								),
-		 								array(
-		 										'id' => $existierendesShooting->id
+		 				// Prüfe Update
+		 				if (isset($existierendesShooting)) {
+		 					// Shooting existiert -> Aktualisieren
+		 					$wpdb->update(
+		 							PAWPS_TABLENAME_SHOOTINGS,
+		 							array(
+		 									'title' => urldecode($jsonResult->title),
+		 									'imageCount' => $jsonResult->imageCount,
+		 									'shootingdate' => $shootingDateDbFormat,
+		 									'pricelist_id' => $jsonResult->preisliste,
+		 									'accesscode' => $jsonResult->zugriffscode,
+		 									'lastupdate' => $datumString
+										),
+	 								array(
+		 									'id' => $existierendesShooting->id
+		 							));
+		 					
+		 					$shootingId = $existierendesShooting->id;
+		 						
+		 					// Images löschen 
+		 					$wpdb->query('DELETE FROM ' . PAWPS_TABLENAME_IMAGES . " WHERE veranstaltungsid=" . $shootingId);
+		 				} else {		 						
+		 					// Shooting existiert noch nicht -> Eintrag in DB vornehmen
+		 					$wpdb->insert(
+		 							PAWPS_TABLENAME_SHOOTINGS, 
+		 							array(
+		 									'title' => urldecode($jsonResult->title),
+		 									'imageCount' => $jsonResult->imageCount,
+		 									'shootingdate' => $shootingDateDbFormat,
+		 									'pricelist_id' => $jsonResult->preisliste,
+											'accesscode' => $jsonResult->zugriffscode,
+	 										'lastupdate' => $datumString
 		 								));
 		 						
-		 						$shootingId = $existierendesShooting->id;
-		 						
-		 						// Images löschen 
-		 						$wpdb->query('DELETE FROM ' . PAWPS_TABLENAME_IMAGES . " WHERE veranstaltungsid=" . $shootingId);
-		 					} else {		 						
-		 						// Shooting existiert noch nicht -> Eintrag in DB vornehmen
-		 						$wpdb->insert(
-		 								PAWPS_TABLENAME_SHOOTINGS, 
-		 								array(
-		 										'title' => urldecode($jsonResult->title),
-		 										'imageCount' => $jsonResult->imageCount,
-		 										'shootingdate' => $shootingDateDbFormat,
-		 										'pricelist_id' => $jsonResult->preisliste,
-		 										'accesscode' => $jsonResult->zugriffscode,
-		 										'lastupdate' => $datumString
-		 									));
-		 						
-		 						$shootingId = $wpdb->insert_id; 
-		 					}
-		 					
-		 					// Lade Shooting erneut
-		 					$existierendesShooting = pawps_loadShootingByData($shootingId);
-		 					pawps_refreshPricelist($existierendesShooting->pricelist_id, $lastRemoteUpdate);
-		 				} else {
-		 					// Shooting gelöscht -> entferne aus lokaler Datenbank
-		 					$wpdb->query('DELETE FROM ' . PAWPS_TABLENAME_SHOOTINGS . " WHERE CODE='" . $jsonResult->zugriffscode . "'");
+		 					$shootingId = $wpdb->insert_id; 
 		 				}
-		 			}
-		 		}
-		 	} else {
-		 		// alle alten Shootings entfernen
-		 		$wpdb->query('DELETE FROM  ' . PAWPS_TABLENAME_SHOOTINGS);
-		 	}
-  		}
-  		
+		 					
+		 				// Lade Shooting erneut
+		 				$existierendesShooting = pawps_loadShootingByData($shootingId);
+		 				pawps_refreshPricelist($existierendesShooting->pricelist_id, $lastRemoteUpdate);
+		 			} else {
+		 				// Shooting gelöscht -> entferne aus lokaler Datenbank
+						$wpdb->query('DELETE FROM ' . PAWPS_TABLENAME_SHOOTINGS . " WHERE CODE='" . $jsonResult->zugriffscode . "'");
+	 				}
+	 			}
+	 		}
+		} else {
+			// alle alten Shootings entfernen
+	 		$wpdb->query('DELETE FROM  ' . PAWPS_TABLENAME_SHOOTINGS);
+	 	}
+  	
   		update_option(PAWPS_LAST_UPDATE_SHOOTINGS, time());
  	}
  }
@@ -119,7 +114,7 @@
  	// Prüfen ob Update notwendig
  	if (!isset($pricelist) || 
  		(((strlen($pricelist->lastupdate) > 5) && ($pricelist->lastupdate < $lastRemoteUpdate)) || (strlen($pricelist->lastupdate) < 5))) {
- 		$remotePricelistJsonResult = json_decode(pawps_getRemotePricelistResult($id));
+ 		$remotePricelistJsonResult = pawps_getRemotePricelistResult($id);
  		
  		// Json interpretieren
  		$lastLocaleUpdate = get_option(PAWPS_LAST_UPDATE_SHOOTINGS);
@@ -141,7 +136,8 @@
  					array(
  							'id' => $remotePricelistJsonResult->id,
  							'title' => urldecode($remotePricelistJsonResult->title),
- 							'lastupdate' => $pricelistDatumString
+ 							'lastupdate' => $pricelistDatumString,
+ 							'laborId' => $remotePricelistJsonResult->laborId
  					));
  				
  			$pricelistId = $wpdb->insert_id;
@@ -200,14 +196,12 @@
 			
 			// Versandlaender der Preisliste anlegen
 			foreach ($remotePricelistJsonResult->laender as $land) {
-				if (strlen(trim($land)) > 0) {
-					$wpdb->insert(
-						PAWPS_TABLENAME_PRICELIST_COUNTRIES,
-						array(
-								'pricelist_id' => $pricelistId,
-								'title' => $land
-						));
-				}
+				$wpdb->insert(
+					PAWPS_TABLENAME_PRICELIST_COUNTRIES,
+					array(
+							'pricelist_id' => $pricelistId,
+							'title' => $land->land
+					));
 			}
  		}
  		
@@ -267,23 +261,19 @@
  
  function pawps_refreshImageList($shootingId, $technicalId) {
  	$remoteJsonResult = pawps_getRemoteImageList($shootingId);
- 	if (PAWPS_DEFAULT_ERROR == $remoteJsonResult) {
- 		return false;
- 	}
  	
  	// Result erhalten -> alte Images entfernen
  	global $wpdb;
  	$wpdb->query('DELETE FROM ' . PAWPS_TABLENAME_IMAGES . " WHERE veranstaltungsid=" . $technicalId);
  	
  	// Images eintragen
- 	$imgResult = json_decode($remoteJsonResult);
- 	foreach ($imgResult as $jsonImg) {
+ 	foreach ($remoteJsonResult as $jsonImg) {
  		$wpdb->insert(
  				PAWPS_TABLENAME_IMAGES,
  				array(
  						'id' => $jsonImg->id,
  						'veranstaltungsid' => $technicalId,
- 						'ordnerId' => pawps_getOrdnerId($technicalId, urldecode($jsonImg->ordner)),
+ 						'ordnerId' => pawps_getOrdnerId($technicalId, urldecode($jsonImg->subDir)),
  						'subDir' => $jsonImg->subDir,
  						'detailUrl' => $jsonImg->detailUrl,
  						'thumbUrl' => $jsonImg->thumbUrl

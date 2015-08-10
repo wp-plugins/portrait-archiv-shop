@@ -4,7 +4,7 @@
 Plugin Name: Portrait-Archiv.com Photostore
 Plugin URI: http://wordpress.org/plugins/portrait-archiv-shop/
 Description: Der Portrait-Archiv.com Photostore stellt dem Benutzer die Moeglichkeit zur einfachen Integration eines Online Foto Nachbestellsystems zur Verfuegung
-Version: 1.7
+Version: 2.0
 Author: Thomas Schiffler
 Author URI: http://www.Portrait-Service.com/
 */
@@ -52,6 +52,14 @@ Author URI: http://www.Portrait-Service.com/
  	
  	// Schedule deaktivieren
  	wp_clear_scheduled_hook('pawps_refresh_daily_hook');
+ 	
+ 	// Temporär alle Config-Werte entfernen
+ 	delete_option(PAWPS_OPTION_HASHKEY);
+ 	delete_option(PAWPS_OPTION_HASHKEY_REMOTE);
+ 	delete_option(PAWPS_OPTION_USERID);
+ 	delete_option(PAWPS_LAST_UPDATE_SHOOTINGS);
+ 	delete_option(PAWPS_DB_VERSION);
+ 	delete_option(PAWPS_DEBUG);
  }
  
   function pawps_insertContent() {

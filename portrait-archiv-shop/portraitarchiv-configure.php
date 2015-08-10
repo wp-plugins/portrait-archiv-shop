@@ -29,11 +29,10 @@
  define ('PAWPS_TABLENAME_CUSTOMERS', $wpdb->prefix . "PAWPS_CUSTOMERS");
  
  // Standardwerte
- define ('PAWPS_DEFAULT_ERROR', 'keine Berechtigung');
  define ('PAWPS_USERTPL_START', 'eigeneVorlage-');
  
  // Umgebungsinfo
- define ('PAWPS_BASE_URL', 'http://old.portrait-archiv.com/');
+ define ('PAWPS_BASE_URL', 'http://localhost:8080/Portrait-Archiv/');
  define ('PAWPS_IMAGE_BASE_URL', 'http://images.portrait-archiv.com');
  
 ?>
