@@ -57,7 +57,7 @@
  			}
  
  			if (!$passwordCheckDone) {
- 				$error = "Zu dem von Ihnen eingegebenen Code konnte keine Gallerie gefunden reden";
+ 				$error = "Zu dem von Ihnen eingegebenen Code konnte keine Galerie gefunden reden";
  			}
  		}
  			

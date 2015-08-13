@@ -46,8 +46,8 @@
 		
 		add_submenu_page(
 			'pawps_admin_menu_mainpage',
-			'Übersicht der Gallerien',
-			'Gallerien',
+			'Übersicht der Galerien',
+			'Galerien',
 			'manage_options',
 			'pawps_admin_menu_shootings',
 			'pawps_admin_menu_shootings');
@@ -200,12 +200,12 @@
 		<form name="verbindungsDatenForm" method="post" action="">
 			<table class="wp-list-table widefat fixed pages" cellspacing="0">
 				<tr>
-					<td width="150px">Galleriedarstellung:</td>
+					<td width="150px">Galeriedarstellung:</td>
 					<td>
 						Zeilen: <input type="text" name="PA_DISPLAY_ZEILEN" value="<?php echo $displayRows; ?>" size="3" maxlength="3" <?php if ($ftpQuestion) echo disabled; ?>>
 						Spalten: <input type="text" name="PA_DISPLAY_SPALTEN" value="<?php echo $displayCols; ?>" size="3" maxlength="3"  <?php if ($ftpQuestion) echo disabled; ?>>
 						<br/>
-						<div style="font-size:10px"><b>Hinweis:</b> Legt fest wie viele Spalten und Zeilen an Bildern max. pro Gallerieseite angezeigt werden sollen</div>
+						<div style="font-size:10px"><b>Hinweis:</b> Legt fest wie viele Spalten und Zeilen an Bildern max. pro Galerieseite angezeigt werden sollen</div>
 					</td>
 				</tr>
 				<tr>
@@ -281,7 +281,7 @@
 				"eventList.tpl" => "Shooting-Liste",
 				"noEntries.tpl" => "keine Elemente vorhanden",
 				"passwordForm.tpl" => "Maske - Gästekennwort",
-				"galleriecodeForm.tpl" => "Maske - Galleriecode",
+				"galleriecodeForm.tpl" => "Maske - Galeriecode",
 				"warenkorbList.tpl" => "Warenkorb",
 				"warenkorbZusammenfassung.tpl" => "Warenkorb Zusammenfassung"
 				);
@@ -378,7 +378,7 @@
 		<div class="wrap">
 			<h3>Anmeldeinformationen</h3>
 			Um das Plugin nutzen zu können benötigen Sie einen kostenlosen Account bei Portrait-Archiv.com. Hier veröffentlichen Sie 
-			Ihre Gallerien welche über das Plugin in Ihre Seite intergriert werden.<br/><br/>
+			Ihre Galerien welche über das Plugin in Ihre Seite intergriert werden.<br/><br/>
 			Ihnen gefällt unser Portrait-Archiv und Sie möchten Ihren Kunden gerne diesen Onlineservice anbieten?<br/>
 			Eröffnen Sie noch heute Ihr eigenes Online Portraitstudio – ganz unverbindlich und ohne Risiko und laufende Kosten. Wenn Sie 
 			keine Umsatzsteigerung durch den Einsatz des Portrait-Archiv haben dann kostet Sie dies selbstverständlich keinen Cent.<br/>
@@ -556,7 +556,7 @@
  		
  		<div class="wrap">
  			<h3>Systemeinrichtung</h3>
- 			Damit das Shopmodul auf Ihre Gallerien bei Portrait-Archiv.com zugreifen ist es notwendig dass Sie die 
+ 			Damit das Shopmodul auf Ihre Galerien bei Portrait-Archiv.com zugreifen ist es notwendig dass Sie die 
  			Systemauthentfizierung durchführen. Führen Sie hierzu die folgenden Schritte durch:
  			<ol>
  				<li>Navigieren Sie innerhalb Ihres Wordpress-Modules zum Menüpunkt 'Portrait-Archiv.com > Verbindungsdaten'
@@ -578,8 +578,8 @@
  			</ol>
  		
  	 		<h3>mögliche Template-Tags</h3>
- 	 		Mit Hilfe des Portrait-Archiv.com Shopmodules haben Sie die Möglichkeit sowohl eine Liste von Gallerien  
- 	 		als auch einzelne Gallerien in Ihre bestehenden Wordpress-Seiten einzubinden. Hierzu genügt es einen bestimmten Tag 
+ 	 		Mit Hilfe des Portrait-Archiv.com Shopmodules haben Sie die Möglichkeit sowohl eine Liste von Galerien  
+ 	 		als auch einzelne Galerien in Ihre bestehenden Wordpress-Seiten einzubinden. Hierzu genügt es einen bestimmten Tag 
  	 		in Ihre Seite einzufügen. Das Modul ersetzt dieses Tag selbstständig gegen die entsprechenden Inhalte. <br/>
  	 		<br/>
  	 		Derzeit stehen folgende Template-Tags zur Verfügung: 
@@ -596,27 +596,27 @@
  						<td>[pawps_publicList]</td>
  						<td>
  							Fügt eine Liste aller Ihrer Gallieren ein, welche von Ihnen für die Anzeige in der 
- 							öffentlichen Liste markiert wurden. Die Gallerien werden mit dem Titel sowie einem zufälligen
- 							Vorschaubild aus der Gallerie dargestellt.  Nach dem Klick auf den Titel oder das Vorschaubild
+ 							öffentlichen Liste markiert wurden. Die Galerien werden mit dem Titel sowie einem zufälligen
+ 							Vorschaubild aus der Galerie dargestellt.  Nach dem Klick auf den Titel oder das Vorschaubild
  							gelangt Ihr Besucher, je nach Konfiguration, entweder zur Eingabe des von Ihnen hinterlegten 
- 							Gästekennwortes oder direkt zur Gallerie.
+ 							Gästekennwortes oder direkt zur Galerie.
  						</td>
  					</tr>
  					<tr valign="top">
  						<td>[pawps_galerie]1[/pawps_galerie]</td>
  						<td>
- 							Fügt eine einzelne Gallerie zur Anzeige in Ihre Seite ein. Die ID der gewählte Gallerie entspricht 
- 							der in der Gallerieübersicht angezeigten numerischen ID. Ersetzen Sie einfach die 1 aus dem Beispiel
- 							gegen die gewünschte ID um die Gallerie in Ihre Seite einzufügen. Der Besucher wird direkt beim Besuch 
- 							der Seite auf die gewünschte Gallerie bzw. zur Abfrage des hitnerlegten Gästekennwortes geleitet. 
+ 							Fügt eine einzelne Galerie zur Anzeige in Ihre Seite ein. Die ID der gewählte Galerie entspricht 
+ 							der in der Galerieübersicht angezeigten numerischen ID. Ersetzen Sie einfach die 1 aus dem Beispiel
+ 							gegen die gewünschte ID um die Galerie in Ihre Seite einzufügen. Der Besucher wird direkt beim Besuch 
+ 							der Seite auf die gewünschte Galerie bzw. zur Abfrage des hitnerlegten Gästekennwortes geleitet. 
  						</td>
  					</tr>
  					<tr valign="top">
  						<td>[pawps_galeriecode]</td>
  						<td>
- 							Fügt den Dialog zur Eingabe des Portrait-Archiv.com Galleriecodes ein. Bei Aufruf der Seite mit dem eingefügten 
- 							Tag ist lediglich der Eingabedialog sichtbar. Nach Eingabe des entsprechenden Galleriecodes gelangt der Besucher 
- 							zur jeweiligen Gallerie. 
+ 							Fügt den Dialog zur Eingabe des Portrait-Archiv.com Galeriecodes ein. Bei Aufruf der Seite mit dem eingefügten 
+ 							Tag ist lediglich der Eingabedialog sichtbar. Nach Eingabe des entsprechenden Galeriecodes gelangt der Besucher 
+ 							zur jeweiligen Galerie. 
  						</td>
  					</tr>
  					<tr valign="top">
@@ -624,7 +624,7 @@
  						<td>
  							Fügt den Dialog zur Eingabe eines Gästepasswortes ein. Bei Aufruf der Seite mit dem eingefügten 
  							Tag ist lediglich der Passwortdialog sichtbar. Nach Eingabe des individuell festgelegten Gästekennwortes 
- 							gelangt der Besucher zur jeweiligen Gallerie. 
+ 							gelangt der Besucher zur jeweiligen Galerie. 
  						</td>
  					</tr>
  				</tbody>
@@ -632,10 +632,10 @@
  			
  			<h3>weitere Hilfeartikel</h3>
  	 		<ul>
- 	 			<li><a href="http://www.portrait-service.com/portrait-archiv/unsere-antworten-auf-ihre-fragen/wie-stelle-ich-die-verbindung-zwischen-wordpress-und-meinen-galerien-her/" target="_blank">Wie stelle ich die Verbindung zwischen WordPress und meinen Gallerien her?</a></li>
+ 	 			<li><a href="http://www.portrait-service.com/portrait-archiv/unsere-antworten-auf-ihre-fragen/wie-stelle-ich-die-verbindung-zwischen-wordpress-und-meinen-galerien-her/" target="_blank">Wie stelle ich die Verbindung zwischen WordPress und meinen Galerien her?</a></li>
  	 			<li><a href="http://www.portrait-service.com/portrait-archiv/unsere-antworten-auf-ihre-fragen/wie-kann-ich-meine-shootings-in-meinen-wordpress-blog-integrieren/" target="_blank">Wie kann ich meine Shootings in meinen WordPress-Blog integrieren?</a></li>
  	 			<li><a href="http://www.portrait-service.com/portrait-archiv/unsere-antworten-auf-ihre-fragen/wie-kann-ich-das-design-meines-wordpress-shops-aendern/" target="_blank">Wie kann ich das Design meines WordPress Shops ändern?</a></li>
- 	 			<li><a href="http://www.portrait-service.com/portrait-archiv/unsere-antworten-auf-ihre-fragen/wie-kann-ich-den-anzeigemodus-einer-galerie-aendern/" target="_blank">Wie kann ich den Anzeigemodus einer Gallerie ändern?</a></li>
+ 	 			<li><a href="http://www.portrait-service.com/portrait-archiv/unsere-antworten-auf-ihre-fragen/wie-kann-ich-den-anzeigemodus-einer-galerie-aendern/" target="_blank">Wie kann ich den Anzeigemodus einer Galerie ändern?</a></li>
  	 		</ul>
  	 	</div>
  		
@@ -827,7 +827,7 @@
  }
  
  function pawps_admin_menu_shootings() {
-	pawps_showAdminHeader("Gallerien"); 
+	pawps_showAdminHeader("Galerien"); 
  		
  	if ( !current_user_can( 'manage_options' ) )  {
  		wp_die( __( 'Ihre aktuelle Berechtigung verhindert den Zugriff auf diese Seite' ) );
@@ -963,7 +963,7 @@
 						<select name="PA_SHOOTINGTYPE">
 							<option value="0" <?php if ($config->state == 0) echo 'selected';?>>inaktiv - Shooting ist auf dieser Seite nicht verfügbar</option>
 							<option value="1" <?php if ($config->state == 1) echo 'selected';?>>Verfügbar durch Eingabe des Gästepasswortes</option>
-							<option value="5" <?php if ($config->state == 5) echo 'selected';?>>Verfügbar durch Eingabe des Galleriecodes</option>
+							<option value="5" <?php if ($config->state == 5) echo 'selected';?>>Verfügbar durch Eingabe des Galeriecodes</option>
 							<option value="4" <?php if ($config->state == 4) echo 'selected';?>>Verfügbar ohne Gästepasswortes</option>
 							<option value="2" <?php if ($config->state == 2) echo 'selected';?>>Darstellung in öffentlicher Liste ohne Passwort</option>
 							<option value="3" <?php if ($config->state == 3) echo 'selected';?>>Darstellung in öffentlicher Liste mit Gästepasswort</option>
@@ -1159,7 +1159,7 @@
 					</p>
 			</form>
 			
-			<h3>Aktuelle Gallerien</h3>
+			<h3>Aktuelle Galerien</h3>
 			<?php 
 				$aktuelleShootings = pawps_getShootingList();
 				if (isset($aktuelleShootings) && (count($aktuelleShootings) > 0)) {
@@ -1181,8 +1181,8 @@
 									foreach ($aktuelleShootings as $shooting) {
 										echo "<tr valign=\"top\">";
 											echo "<td align='center'>";
-											echo "<a href='" . add_query_arg ('showShootingImages', $shooting->id) . "' title='Bilder der Gallerie anzeigen'><img src='" . plugins_url( 'resources/eye.png' , __FILE__ ) . "' border='0' height='15px' width='15px' /></a>";
-											echo "<a href='" . add_query_arg ('showShootingPricelist', $shooting->id) . "' title='Preisliste der Gallerie anzeigen'><img src='" . plugins_url( 'resources/euro.png' , __FILE__ ) . "' border='0' height='15px' width='15px' style='padding-left: 5px'/></a>";
+											echo "<a href='" . add_query_arg ('showShootingImages', $shooting->id) . "' title='Bilder der Galerie anzeigen'><img src='" . plugins_url( 'resources/eye.png' , __FILE__ ) . "' border='0' height='15px' width='15px' /></a>";
+											echo "<a href='" . add_query_arg ('showShootingPricelist', $shooting->id) . "' title='Preisliste der Galerie anzeigen'><img src='" . plugins_url( 'resources/euro.png' , __FILE__ ) . "' border='0' height='15px' width='15px' style='padding-left: 5px'/></a>";
 											echo "</td>";
 											echo "<td>";
 											echo $shooting->id;
@@ -1221,7 +1221,7 @@
 					<?php 
 				} else {
 					// keine Shootings vorhanden
-					?>- Bisher sind keine Gallerien für Sie hinterlegt - <?php 
+					?>- Bisher sind keine Galerien für Sie hinterlegt - <?php 
 				}
 			
 			?>
