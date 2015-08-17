@@ -694,14 +694,22 @@
  	}
  }
  
+ class pawps_customerSimple {
+ 	var $kundennummer, $email, $name, $vorname;
+ }
+ 
+ class pawps_address {
+ 	var $coName, $strasse, $hausnummer, $plz, $ort, $land;
+ }
+ 
  class pawps_transferWarenkorbPosition {
  	var $imageId, $productId, $anzahl;
  }
  
  class pawps_warenkorbTransfer {
- 	var $positionen, $customer;
+ 	var $positionen;
  	
- 	function __construct($warenkorb, $withCustomer = true) {
+ 	function __construct($warenkorb) {
  		$this->positionen = array();
  		
  		foreach ($warenkorb->positionen as $position) {
@@ -714,29 +722,6 @@
 	 				array_push($this->positionen, $tmpPos);
  				}
  			}
- 		}
- 		
- 		if ($withCustomer) {
-	 		$customer = $warenkorb->getCustomer();
-	 		if (isset($customer)) {
-	 			$customer->email = urlencode($customer->email);
-	 			$customer->name = urlencode($customer->name);
-	 			$customer->firstname = urlencode($customer->firstname);
-	 			$customer->street = urlencode($customer->street);
-	 			$customer->plz = urlencode($customer->plz);
-	 			$customer->city = urlencode($customer->city);
-	 			$customer->country = urlencode($customer->country);
-	 			$customer->number = urlencode($customer->number);
-	 			$customer->ver_name = urlencode($customer->ver_name);
-	 			$customer->ver_firstname = urlencode($customer->ver_firstname);
-	 			$customer->ver_street = urlencode($customer->ver_street);
-	 			$customer->ver_plz = urlencode($customer->ver_plz);
-	 			$customer->ver_city = urlencode($customer->ver_city);
-	 			$customer->ver_country = urlencode($customer->ver_country);
-	 			$customer->ver_number = urlencode($customer->ver_number);
-	 			
-	 			$this->customer = $customer;
-	 		}
  		}
  	}
  }

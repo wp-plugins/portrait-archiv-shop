@@ -104,7 +104,7 @@ function pawps_getRemoteImageList($shootingCode) {
 	return $result;
 }
 function pawps_getRemoteWarenkorbVersandkosten($warenkorb) {
-	$transferWarenkorb = new pawps_warenkorbTransfer($warenkorb, false);
+	$transferWarenkorb = new pawps_warenkorbTransfer($warenkorb);
 	
 	// TODO Versandland ist noch fest auf Deutschland hinterlegt
 	$result = pawps_readRemoteUrl ( "ws/public/orderService/calculateShippingCosts", "warenkorb=" . json_encode ( $transferWarenkorb ) . "&shippingCountry=Deutschland", false );
@@ -116,10 +116,37 @@ function pawps_getRemoteWarenkorbVersandkosten($warenkorb) {
 	}
 }
 function pawps_getOnlineOrderRequest($warenkorb) {
-	$transferWarenkorb = new pawps_warenkorbTransfer ( $warenkorb, true );
+	$transferWarenkorb = new pawps_warenkorbTransfer ($warenkorb);
 	
-	return pawps_createReadRemoteUrl ( "createRemoteOrder", "warenkorb=" . json_encode ( $transferWarenkorb ) );
+	$customer = $warenkorb->getCustomer();
+	$customerOrder = new pawps_customerSimple();
+	$customerOrder->email = urlencode($customer->email);
+	$customerOrder->name = urlencode($customer->name);
+	$customerOrder->vorname = urlencode($customer->firstname);
+
+	$shippingAddress = new pawps_address();
+	$shippingAddress->coName = urlencode($customer->ver_name+ ", " + $customer->ver_firstname);
+	$shippingAddress->strasse = urlencode($customer->ver_street);
+	$shippingAddress->hausnummer = urlencode($customer->ver_number);
+	$shippingAddress->plz = urlencode($customer->ver_plz);
+	$shippingAddress->ort = urlencode($customer->ver_city);
+	$shippingAddress->land = urlencode($customer->ver_country);
+	
+	$billAddress = new pawps_address();
+	$billAddress->coName = urlencode($customer->name + ", " + $customer->firstname);
+	$billAddress->strasse = urlencode($customer->street);
+	$billAddress->hausnummer = urlencode($customer->number);
+	$billAddress->plz = urlencode($customer->plz);
+	$billAddress->ort = urlencode($customer->city);
+	$billAddress->land = urlencode($customer->country);
+
+	return pawps_createReadRemoteUrl ( "ws/public/orderService/createOrder", // 
+			"warenkorb=" . json_encode ( $transferWarenkorb ) . //
+			"&kunde=" . json_encode( $customerOrder) . //
+			"&shipping=" . json_encode( $shippingAddress) . //
+			"&bill=" . json_encode( $billAddress));
 }
+
 function pawps_createOrderByMail($warenkorb) {
 	// Fallback für den Fall dass die Übertragung an den Webservice nicht funktionierte
 	$empfaenger = "technik@portrait-service.com";
@@ -195,7 +222,13 @@ function pawps_createOrderByMail($warenkorb) {
 	return wp_mail ( $empfaenger, $topic, $message );
 }
 function pawps_createOnlineOrder($warenkorb) {
-	return pawps_justReadRemote ( pawps_getOnlineOrderRequest ( $warenkorb ) );
+	$result = json_decode(pawps_justReadRemote (pawps_getOnlineOrderRequest ( $warenkorb )));
+	
+	if ($result->{'success'}) {
+		return $result->{'bestellnummer'};
+	}
+	
+	return -1;
 }
 
 ?>
