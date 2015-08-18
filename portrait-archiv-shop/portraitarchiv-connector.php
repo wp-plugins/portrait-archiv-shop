@@ -32,7 +32,9 @@ function pawps_createReadRemoteUrl($scriptName, $paramString = null) {
 	
 	// Build URL
 	$systemUrl = urlencode(site_url());
-	$url = PAWPS_BASE_URL . $scriptName . "?";
+	
+	$url = pawps_getUrl(true);
+	$url .= $scriptName . "?";
 	$url .= "loginData=";
  	$url .= json_encode(array('id' => trim($paUserId), 'hash' => trim($paHash), 'remoteHash' => trim($paHashRemote),  'systemUrl' => trim($systemUrl)));
 	
@@ -103,11 +105,17 @@ function pawps_getRemoteImageList($shootingCode) {
 	
 	return $result;
 }
+
 function pawps_getRemoteWarenkorbVersandkosten($warenkorb) {
 	$transferWarenkorb = new pawps_warenkorbTransfer($warenkorb);
 	
-	// TODO Versandland ist noch fest auf Deutschland hinterlegt
-	$result = pawps_readRemoteUrl ( "ws/public/orderService/calculateShippingCosts", "warenkorb=" . json_encode ( $transferWarenkorb ) . "&shippingCountry=Deutschland", false );
+	$chosenCountry = get_option(PAWPS_SYSTEMCOUNTRY);
+	if ($chosenCountry = "CH") {
+		$versandland = "Schweiz";
+	} else {
+		$versandland = "Deutschland";
+	}
+	$result = pawps_readRemoteUrl ( "ws/public/orderService/calculateShippingCosts", "warenkorb=" . json_encode ( $transferWarenkorb ) . "&shippingCountry=" . $versandland, false );
 	
 	if (! $result->{'success'}) {
 		return -1;
@@ -229,6 +237,32 @@ function pawps_createOnlineOrder($warenkorb) {
 	}
 	
 	return -1;
+}
+
+function pawps_getUrl($base = true) {
+	if (PAWPS_LOCAL_DEV) {
+		if ($base) {
+			return 'http://localhost:8080/Portrait-Archiv/'; 
+		} else {
+			return "http://localhost/images/";
+		}
+	}
+	
+	$chosenCountry = get_option(PAWPS_SYSTEMCOUNTRY);
+	if ($chosenCountry == "DE") {
+		if ($base) {
+			return 'https://www.Portrait-Archiv.com/';
+		} else {
+			return "http://images.portrait-archiv.com/";
+		}
+	} else if ($chosenCountry == "CH") {
+		if ($base) {
+			return 'http://www.Portrait-Archiv.ch/';
+		} else {
+			return "http://images.portrait-archiv.ch/";
+		}
+		return 'http://www.Portrait-Archiv.ch/';
+	}	
 }
 
 ?>

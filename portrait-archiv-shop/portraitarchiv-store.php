@@ -31,6 +31,7 @@ Author URI: http://www.Portrait-Service.com/
  	add_option(PAWPS_LAST_UPDATE_SHOOTINGS);
  	add_option(PAWPS_DB_VERSION, 0);
  	add_option(PAWPS_DEBUG, 0);
+ 	add_option(PAWPS_SYSTEMCOUNTRY, 'DE');
 
  	// Anzeige-Konfiguration
  	add_option(PAWPS_TEMPLATE_NAME, 'default');

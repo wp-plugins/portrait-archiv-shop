@@ -5,14 +5,6 @@
  	
  	$updateDone = false;
  	
- 	if (get_option(PAWPS_DB_VERSION) < 4) {
- 		// Images-Table löschen
- 		global $wpdb;
- 		$wpdb->query('DROP TABLE ' . PAWPS_TABLENAME_IMAGES);
- 		$wpdb->query('DELETE FROM ' . PAWPS_TABLENAME_SHOOTINGS);
- 		$wpdb->query('DELETE FROM ' . PAWPS_TABLENAME_ORDNER);
- 	}
- 	
  	if (get_option(PAWPS_DB_VERSION) < $currentDatabaseVersion) {
 	 	require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
 	 	

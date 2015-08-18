@@ -389,6 +389,8 @@
 			Geschäftsbedingungen</a> unterliegen.
 			
 			<?php
+			
+			$paSystemCountry = get_option(PAWPS_SYSTEMCOUNTRY);
 
 			if (isset($_POST['anmeldungDurchfuehren'])) {
 				// Form abgesendet -> Anmeldung durchführen
@@ -400,6 +402,9 @@
 				$error .= pawps_validateField($_POST['paOrt'], "Ort");
 				$error .= pawps_validateField($_POST['paMail'], "E-Mail");
 				$error .= pawps_validateField($_POST['paUrl'], "Homepage-URL");			
+				
+				$paSystemCountry = $_POST['PA_NIEDERLASSUNG'];
+				update_option(PAWPS_SYSTEMCOUNTRY, $paSystemCountry);
 				
 				if (strlen($error) == 0) {
 					// Maske prinzipiell OK -> detaillierte Validierungen durchführen
@@ -431,6 +436,7 @@
 					$anmeldedaten->email = urlencode($_POST['paMail']);
 					$anmeldedaten->homepage = urlencode($_POST['paUrl']);
 					$anmeldedaten->wpUrl = urlencode(site_url());
+					$anmeldedaten->land = urlencode($_POST['paLand']);
 					
 					$result = pawps_doAnmeldung($anmeldedaten);
 					if ($result == "true") {
@@ -478,7 +484,12 @@
 					</tr>
 					<tr>
 						<td>Land:</td>
-						<td>Deutschland</td>
+						<td>
+							<select name="paLand">
+								<option value="DE"<?php if ($_POST['paLand'] == 'DE') echo " selected"; ?>>Deutschland</option>
+								<option value="CH"<?php if ($_POST['paLand'] == 'CH') echo " selected"; ?>>Schweiz</option>
+							</select>
+						</td>
 					</tr>
 					<tr>
 						<td>Telefon:</td>
@@ -491,6 +502,15 @@
 					<tr>
 						<td>URL zur Homepage:</td>
 						<td><input type="text" name="paUrl" value="<?php echo $_POST['paUrl']; ?>" size="40" maxlength="50" ></td>
+					</tr>
+					<tr>
+						<td>Portrait-Archiv Niederlassung:</td>
+						<td>
+							<select name="PA_NIEDERLASSUNG">
+								<option value="DE"<?php if ($paSystemCountry == 'DE') echo " selected"; ?>>Deutschland (Portrait-Archiv.com)</option>
+								<option value="CH"<?php if ($paSystemCountry == 'CH') echo " selected"; ?>>Schweiz (Portrait-Archiv.ch)</option>
+							</select>
+						</td>
 					</tr>
 					<tr>
 						<td colspan="2">
@@ -653,7 +673,8 @@
 	$paHash = get_option(PAWPS_OPTION_HASHKEY);
 	$paHashRemote = get_option(PAWPS_OPTION_HASHKEY_REMOTE);
 	$paUserId = get_option(PAWPS_OPTION_USERID);
-
+	$paSystemCountry = get_option(PAWPS_SYSTEMCOUNTRY);
+	
 	if (isset($_POST['grundeinstellungSubmit'])) {
 		// Einstellungen übernehmen
 		$paHashRemote = trim($_POST['PA_HASHKEY_REMOTE']);
@@ -661,6 +682,7 @@
 		
 		update_option(PAWPS_OPTION_HASHKEY_REMOTE, $paHashRemote );
 		update_option(PAWPS_OPTION_USERID, $paUserId);
+		update_option(PAWPS_SYSTEMCOUNTRY, $_POST['PA_NIEDERLASSUNG']);
 		
 		// Verbindung prüfen
 		if (!isset($error) || (strlen($error) == 0)) {
@@ -685,6 +707,15 @@
 					<tr>
 						<td width="150px">User-ID:</td>
 						<td><input type="text" name="PA_USERID" value="<?php echo $paUserId; ?>" size="10" maxlength="10" ></td>
+					</tr>
+					<tr>
+						<td>Portrait-Archiv Niederlassung:</td>
+						<td>
+							<select name="PA_NIEDERLASSUNG">
+								<option value="DE"<?php if ($paSystemCountry == 'DE') echo " selected"; ?>>Deutschland (Portrait-Archiv.com)</option>
+								<option value="CH"<?php if ($paSystemCountry == 'CH') echo " selected"; ?>>Schweiz (Portrait-Archiv.ch)</option>
+							</select>
+						</td>
 					</tr>
 					<tr>
 						<td>Modul-Token:</td>

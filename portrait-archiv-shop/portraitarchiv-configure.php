@@ -13,6 +13,7 @@
  define ('PAWPS_DISPLAY_COLS', 'PAWPS_DISPLAY_COLS');
  define ('PAWPS_TEMPLATE_NAME', 'PAWPS_TEMPLATE_NAME'); 
  define ('PAWPS_DEBUG', 'PAWPS_DEBUG');
+ define ('PAWPS_SYSTEMCOUNTRY', 'PAWPS_SYSTEMCOUNTRY');
  
  define ('PAWPS_TABLENAME_SHOOTINGS', $wpdb->prefix . "PAWPS_SHOOTINGS");
  define ('PAWPS_TABLENAME_ORDNER', $wpdb->prefix . "PAWPS_ORDNER");
@@ -30,9 +31,6 @@
  
  // Standardwerte
  define ('PAWPS_USERTPL_START', 'eigeneVorlage-');
- 
- // Umgebungsinfo
- define ('PAWPS_BASE_URL', 'http://localhost:8080/Portrait-Archiv/');
- define ('PAWPS_IMAGE_BASE_URL', 'http://images.portrait-archiv.com');
- 
+
+ define ('PAWPS_LOCAL_DEV', true);
 ?>

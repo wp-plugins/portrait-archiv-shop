@@ -351,11 +351,11 @@
  	}
  	
  	function getThumbUrl() {
- 		return urldecode(PAWPS_IMAGE_BASE_URL . "/" . $this->subDir . "/" . $this->thumbUrl);
+ 		return urldecode(pawps_getUrl(false) . "/" . $this->subDir . "/" . $this->thumbUrl);
  	}
  	
  	function getDetailUrl() {
- 		return urldecode(PAWPS_IMAGE_BASE_URL . "/" . $this->subDir . "/" . $this->detailUrl);
+ 		return urldecode(pawps_getUrl(false) . "/" . $this->subDir . "/" . $this->detailUrl);
  	}
  }
  
@@ -727,7 +727,7 @@
  }
  
  class pawps_newFotograf {
- 	var $firma, $name, $vorname, $strasse, $nr, $plz, $ort, $telefon, $email, $homepage, $wpUrl;
+ 	var $firma, $name, $vorname, $strasse, $nr, $plz, $ort, $telefon, $email, $homepage, $wpUrl, $land;
  }
 
 ?>
