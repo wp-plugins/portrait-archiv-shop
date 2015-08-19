@@ -423,10 +423,17 @@
 
 			if (strlen($error) == 0) {
 				// Bestellung durchfuehren
-				$bestellnummer = pawps_createOnlineOrder($warenkorb);
+				$zahlungsweise = $_POST['zahlungsweise'];
+				if (!isset($zahlungsweise) || !is_numeric($zahlungsweise)) {
+					$zahlungsweise = 1;
+				}
 				
-				if (isset($bestellnummer) && (is_numeric($bestellnummer) && ($bestellnummer > 0))) {
+				$result = pawps_createOnlineOrder($warenkorb, $_POST['zahlungsweise']);
+				
+				if ($result->{'success'}) {
 					$message = "Ihre Bestellung wurde erfolgreich aufgegeben, weitere Details sind bereits per Mail auf dem Weg zu Ihnen.";
+					
+					$bestellnummer = $result->{'bestellnummer'};
 					
 					// Eintrag mit Bestellnummer
 					global $wpdb;
@@ -439,8 +446,13 @@
 							array(
 									'id' => $warenkorb->id
 							));
+					
+					// redirect zu PayPal sofern notwendig
+					if ($result->{'externeZahlungRedirect'}) {
+						wp_redirect($result->{'externeZahlungRedirectUrl'});
+					}
 				} else {
-					if (pawps_createOrderByMail($warenkorb)) {
+					if (pawps_createOrderByMail($warenkorb, $_POST['zahlungsweise'])) {
 						$message = "Ihre Bestellung wurde übertragen, Sie erhalten nach Prüfung der selbigen eine Bestellbestätigung per Mail.";
 						
 						// Eintrag ohne Bestellnummer

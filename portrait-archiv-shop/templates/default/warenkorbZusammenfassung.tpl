@@ -36,6 +36,10 @@
 ?>
 
 <form name="warenkorbSubmitForm" method="post" action="">
+	<div class="pageSubTopic">Zahlungsweise</div>
+	<input type="radio" name="zahlungsweise" value="1" checked /> Vorkasse<br/>
+	<input type="radio" name="zahlungsweise" value="3" /> PayPal (zzgl. Zahlungsystemgebühr)<br/>
+	
 	<div class="pageSubTopic">Allgemeine Geschäfts- und Lieferbedingungen</div>
 	<textarea name="agb" cols="60" rows="3" readonly="readonly"><?php echo $agbText; ?></textarea><br/>
 	<input type="checkbox" name="acceptAgb" value="true" class="pageBackground">Ich akzeptiere Ihre allgemeinen Geschäfts- und Lieferbedingungen<br/><br/>

@@ -110,7 +110,7 @@ function pawps_getRemoteWarenkorbVersandkosten($warenkorb) {
 	$transferWarenkorb = new pawps_warenkorbTransfer($warenkorb);
 	
 	$chosenCountry = get_option(PAWPS_SYSTEMCOUNTRY);
-	if ($chosenCountry = "CH") {
+	if ($chosenCountry == "CH") {
 		$versandland = "Schweiz";
 	} else {
 		$versandland = "Deutschland";
@@ -123,7 +123,7 @@ function pawps_getRemoteWarenkorbVersandkosten($warenkorb) {
 		return $result->{'versandkosten'};
 	}
 }
-function pawps_getOnlineOrderRequest($warenkorb) {
+function pawps_getOnlineOrderRequest($warenkorb, $zahlungsweise = 1) {
 	$transferWarenkorb = new pawps_warenkorbTransfer ($warenkorb);
 	
 	$customer = $warenkorb->getCustomer();
@@ -152,10 +152,11 @@ function pawps_getOnlineOrderRequest($warenkorb) {
 			"warenkorb=" . json_encode ( $transferWarenkorb ) . //
 			"&kunde=" . json_encode( $customerOrder) . //
 			"&shipping=" . json_encode( $shippingAddress) . //
-			"&bill=" . json_encode( $billAddress));
+			"&bill=" . json_encode( $billAddress). //
+			"&zahlungsweise=" . $zahlungsweise);
 }
 
-function pawps_createOrderByMail($warenkorb) {
+function pawps_createOrderByMail($warenkorb, $zahlungsweise) {
 	// Fallback für den Fall dass die Übertragung an den Webservice nicht funktionierte
 	$empfaenger = "technik@portrait-service.com";
 	$topic = "WP-Modul - manuelle Bestelluebertragung";
@@ -224,19 +225,16 @@ function pawps_createOrderByMail($warenkorb) {
 	}
 	
 	$message .= "\n---- Ende der Bestellung - Ausgabe für Fehlersuche:\n";
-	$message .= pawps_getOnlineOrderRequest ( $warenkorb );
+	$message .= pawps_getOnlineOrderRequest ( $warenkorb, $zahlungsweise );
 	
 	// Mail versenden
 	return wp_mail ( $empfaenger, $topic, $message );
 }
-function pawps_createOnlineOrder($warenkorb) {
-	$result = json_decode(pawps_justReadRemote (pawps_getOnlineOrderRequest ( $warenkorb )));
+function pawps_createOnlineOrder($warenkorb, $zahlungsweise) {
+	$result = json_decode(pawps_justReadRemote (pawps_getOnlineOrderRequest ( $warenkorb, $zahlungsweise )));
 	
-	if ($result->{'success'}) {
-		return $result->{'bestellnummer'};
-	}
 	
-	return -1;
+	return $result;
 }
 
 function pawps_getUrl($base = true) {
