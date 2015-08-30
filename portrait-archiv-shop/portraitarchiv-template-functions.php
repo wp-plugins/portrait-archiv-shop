@@ -450,6 +450,7 @@
 					// redirect zu PayPal sofern notwendig
 					if ($result->{'externeZahlungRedirect'}) {
 						wp_redirect($result->{'externeZahlungRedirectUrl'});
+						exit;
 					}
 				} else {
 					if (pawps_createOrderByMail($warenkorb, $_POST['zahlungsweise'])) {

@@ -60,7 +60,15 @@ function pawps_justReadRemote($url) {
 	
 	if (pawps_syscheck_urlFopen ()) {
 		pawps_doDebug ( "Lese über fopen" );
-		$content = file_get_contents ( $url );
+		
+		$arrContextOptions=array(
+				"ssl"=>array(
+						"verify_peer"=>false,
+						"verify_peer_name"=>false,
+				),
+		);
+		
+		$content = file_get_contents ( $url, false, stream_context_create($arrContextOptions) );
 	} else if (pawps_syscheck_curl ()) {
 		pawps_doDebug ( "Lese über curl" );
 		$curl = curl_init ( $url );
@@ -242,7 +250,7 @@ function pawps_getUrl($base = true) {
 		if ($base) {
 			return 'http://localhost:8080/Portrait-Archiv/'; 
 		} else {
-			return "http://localhost/images/";
+			return "https://images.portrait-archiv.com/";
 		}
 	}
 	
@@ -251,7 +259,7 @@ function pawps_getUrl($base = true) {
 		if ($base) {
 			return 'https://www.Portrait-Archiv.com/';
 		} else {
-			return "http://images.portrait-archiv.com/";
+			return "https://images.portrait-archiv.com/";
 		}
 	} else if ($chosenCountry == "CH") {
 		if ($base) {

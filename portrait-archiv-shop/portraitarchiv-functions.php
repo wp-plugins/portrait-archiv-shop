@@ -266,6 +266,9 @@
  	global $wpdb;
  	$wpdb->query('DELETE FROM ' . PAWPS_TABLENAME_IMAGES . " WHERE veranstaltungsid=" . $technicalId);
  	
+ 	$codeElements = split ( "-", $shootingId );
+ 	$shootingId = $codeElements[1];
+ 	
  	// Images eintragen
  	foreach ($remoteJsonResult as $jsonImg) {
  		$wpdb->insert(
@@ -273,6 +276,7 @@
  				array(
  						'id' => $jsonImg->id,
  						'veranstaltungsid' => $technicalId,
+ 						'onlineVeranstaltungId' => $shootingId,
  						'ordnerId' => pawps_getOrdnerId($technicalId, urldecode($jsonImg->subDir)),
  						'subDir' => $jsonImg->subDir,
  						'detailUrl' => $jsonImg->detailUrl,
@@ -577,6 +581,11 @@
  
  function pawps_syscheck_curl() {
  	return function_exists('curl_init');
+ }
+ 
+ add_action('init', 'do_output_buffer');
+ function do_output_buffer() {
+ 	ob_start();
  }
  
 ?>

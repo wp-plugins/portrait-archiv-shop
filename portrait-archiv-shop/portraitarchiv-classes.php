@@ -299,11 +299,12 @@
  }
  
  class pawps_image {
- 	var $id, $veranstaltungsid, $detailUrl, $thumbUrl, $baseUrl, $ordnerId;
+ 	var $id, $veranstaltungsid, $onlineVeranstaltungId, $detailUrl, $thumbUrl, $baseUrl, $ordnerId;
  	
  	function __construct($values) {
  		$this->id = $values->id;
  		$this->veranstaltungsid = $values->veranstaltungsid;
+ 		$this->onlineVeranstaltungId = $values->onlineVeranstaltungId;
  		$this->detailUrl = $values->detailUrl;
  		$this->thumbUrl = $values->thumbUrl;
  		$this->subDir = $values->subDir;
@@ -351,11 +352,11 @@
  	}
  	
  	function getThumbUrl() {
- 		return urldecode(pawps_getUrl(false) . "/" . $this->subDir . "/" . $this->thumbUrl);
+ 		return urldecode(pawps_getUrl(false) . $this->onlineVeranstaltungId . "/" . $this->subDir . "/" . $this->thumbUrl);
  	}
  	
  	function getDetailUrl() {
- 		return urldecode(pawps_getUrl(false) . "/" . $this->subDir . "/" . $this->detailUrl);
+ 		return urldecode(pawps_getUrl(false) . $this->onlineVeranstaltungId ."/" . $this->subDir . "/" . $this->detailUrl);
  	}
  }
  

@@ -1,7 +1,7 @@
 <?php
 
  function pawps_setupDatabase() {
- 	$currentDatabaseVersion = 4;
+ 	$currentDatabaseVersion = 5;
  	
  	$updateDone = false;
  	
@@ -72,6 +72,7 @@
 		$tableSql = 'CREATE TABLE ' . PAWPS_TABLENAME_IMAGES . ' (
 				id MEDIUMINT(8) NOT NULL,
 				veranstaltungsid MEDIUMINT(5) NOT NULL,
+				onlineVeranstaltungId MEDIUMINT(8) NOT NULL,
 				ordnerId MEDIUMINT(8) NOT NULL,
 				subDir VARCHAR(100) NOT NULL,
 				detailUrl VARCHAR(20) NOT NULL,
