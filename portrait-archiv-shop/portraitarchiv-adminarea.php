@@ -2,8 +2,8 @@
  
  function pawps_admin_menu() {
 	add_menu_page(
-		'Portrait-Archiv.com Adminbereich',
-		'Portrait-Archiv.com',
+		'Portrait-Archiv Adminbereich',
+		'Portrait-Archiv',
 		'manage_options',
 		'pawps_admin_menu_mainpage',
 		'pawps_admin_menu_mainpage',
@@ -11,7 +11,7 @@
 	
 	add_submenu_page(
 		'pawps_admin_menu_mainpage',
-		'Portrait-Archiv.com Anleitung',
+		'Portrait-Archiv Anleitung',
 		'Anleitung',
 		'manage_options',
 		'pawps_admin_menu_anleitung',
@@ -21,7 +21,7 @@
 		if (!pawps_isConnectionWorking()) {
 			add_submenu_page(
 				'pawps_admin_menu_mainpage',
-				'Portrait-Archiv.com Anmeldung',
+				'Portrait-Archiv Anmeldung',
 				'Anmeldung',
 				'manage_options',
 				'pawps_admin_menu_anmeldung',
@@ -30,7 +30,7 @@
 			
 		add_submenu_page(
 			'pawps_admin_menu_mainpage',
-			'Portrait-Archiv.com Verbindungsdaten',
+			'Portrait-Archiv Verbindungsdaten',
 			'Verbindungsdaten',
 			'manage_options',
 			'pawps_admin_menu_grundeinstellungen',
@@ -38,7 +38,7 @@
 		
 		add_submenu_page(
 			'pawps_admin_menu_mainpage',
-			'Portrait-Archiv.com Design',
+			'Portrait-Archiv Design',
 			'Design',
 			'manage_options',
 			'pawps_admin_menu_template',
@@ -82,7 +82,7 @@
  function pawps_showAdminHeader($title = null) {
  	?>
  	 		<div class="wrap">
- 		 		<h2><img src="<?php echo plugins_url( 'portrait-archiv-shop/resources/logo.png' ); ?>" /> Portrait-Archiv.com<?php if (isset($title)) echo " > " . $title; ?></h2>
+ 		 		<h2><img src="<?php echo plugins_url( 'portrait-archiv-shop/resources/logo.png' ); ?>" /> Portrait-Archiv<?php if (isset($title)) echo " > " . $title; ?></h2>
  		 	</div>
  	<?php 	
  }
@@ -99,22 +99,7 @@
 	}
 
 	
-	// alte Werte aus Options laden
-	$displayRows = get_option(PAWPS_DISPLAY_ROWS);
-	$displayCols = get_option(PAWPS_DISPLAY_COLS);
-	
 	if (isset($_POST['anzeigeeinstellungSubmit'])) {
-		$displayRows = $_POST['PA_DISPLAY_ZEILEN'];
-		$displayCols = $_POST['PA_DISPLAY_SPALTEN'];
-
-		if	(!is_numeric($displayRows) || !is_numeric($displayCols) ||
-		$displayRows < 1 || $displayCols < 1) {
-			$error = "Eine Darstellung mit Werten kleiner 1 in den Feldern 'Zeilen' oder 'Spalten' wird nicht unterstützt.";
-		} else {
-			update_option(PAWPS_DISPLAY_ROWS, $displayRows);
-			update_option(PAWPS_DISPLAY_COLS, $displayCols);
-		}
-
 		$templateName = $_POST['pawps_template'];
 		update_option(PAWPS_TEMPLATE_NAME, $_POST['pawps_template']);
 
@@ -152,9 +137,6 @@
 				$newHome .= "pawps_usertemplates/" . PAWPS_USERTPL_START . $_POST['newUsertemplateName'];
 				
 				pawps_copyDirectory($conn_id, pawps_getTemplateFilePath(''), $newHome);
-				// 			$upload_dir = wp_upload_dir();
-				// 			ftp_chdir($conn_id, $upload_dir['basedir']);
-				// 			ftp_mkdir($conn_id, "pawps_usertemplates");
 				
 				$message = "Das Template wurde erfolgreich angelegt und steht Ihnen ab sofort zur Verfügung";
 			} else {
@@ -200,16 +182,7 @@
 		<form name="verbindungsDatenForm" method="post" action="">
 			<table class="wp-list-table widefat fixed pages" cellspacing="0">
 				<tr>
-					<td width="150px">Galeriedarstellung:</td>
-					<td>
-						Zeilen: <input type="text" name="PA_DISPLAY_ZEILEN" value="<?php echo $displayRows; ?>" size="3" maxlength="3" <?php if ($ftpQuestion) echo disabled; ?>>
-						Spalten: <input type="text" name="PA_DISPLAY_SPALTEN" value="<?php echo $displayCols; ?>" size="3" maxlength="3"  <?php if ($ftpQuestion) echo disabled; ?>>
-						<br/>
-						<div style="font-size:10px"><b>Hinweis:</b> Legt fest wie viele Spalten und Zeilen an Bildern max. pro Galerieseite angezeigt werden sollen</div>
-					</td>
-				</tr>
-				<tr>
-					<td>Template:</td>
+					<td width="100px">Template:</td>
 					<td>
 						<select name="pawps_template" <?php if ($ftpQuestion) echo disabled; ?>>
 						<?php
@@ -377,7 +350,7 @@
 	
 		<div class="wrap">
 			<h3>Anmeldeinformationen</h3>
-			Um das Plugin nutzen zu können benötigen Sie einen kostenlosen Account bei Portrait-Archiv.com. Hier veröffentlichen Sie 
+			Um das Plugin nutzen zu können benötigen Sie einen kostenlosen Account bei Portrait-Archiv. Hier veröffentlichen Sie 
 			Ihre Galerien welche über das Plugin in Ihre Seite intergriert werden.<br/><br/>
 			Ihnen gefällt unser Portrait-Archiv und Sie möchten Ihren Kunden gerne diesen Onlineservice anbieten?<br/>
 			Eröffnen Sie noch heute Ihr eigenes Online Portraitstudio – ganz unverbindlich und ohne Risiko und laufende Kosten. Wenn Sie 
@@ -507,7 +480,7 @@
 						<td>Portrait-Archiv Niederlassung:</td>
 						<td>
 							<select name="PA_NIEDERLASSUNG">
-								<option value="DE"<?php if ($paSystemCountry == 'DE') echo " selected"; ?>>Deutschland (Portrait-Archiv.com)</option>
+								<option value="DE"<?php if ($paSystemCountry == 'DE') echo " selected"; ?>>Deutschland (Portrait-Archiv)</option>
 								<option value="CH"<?php if ($paSystemCountry == 'CH') echo " selected"; ?>>Schweiz (Portrait-Archiv.ch)</option>
 							</select>
 						</td>
@@ -539,18 +512,18 @@
 	?>
 	
 	<div class="wrap">
-		<h3>Was ist Portrait-Archiv.com</h3>
+		<h3>Was ist Portrait-Archiv</h3>
 		Das Portrait-Archiv ist ein Angebot der Firma <a href="http://www.Portrait-Service.com" target="_blank">Portrait-Service</a>.
-		Mit Hilfe von Portrait-Archiv.com haben Sie die Möglichkeit, Ihre Bilder einfach und unkompliziert online zum Verkauf 
+		Mit Hilfe von Portrait-Archiv haben Sie die Möglichkeit, Ihre Bilder einfach und unkompliziert online zum Verkauf 
 		anzubieten. Hierbei genügt es Ihre Bilder in Ihrem Online Archiv zu veröffentlichen und die gewünschten Verkaufspreise 
 		der einzelnen Artikel anzugeben. Egal ob Photoabzug, Poster, digitaler Download ... fast alles ist möglich. Die gesamte
 		Abwicklung, von der Bestellannahme über den Zahlungseingang bis zur Produktion und Auslieferung übernimmt hierbei 
-		Portrait-Archiv.com für Sie. Pünktlich zum Monatsanfang erhalten Sie Ihre detaillierte Provisionsabrechnung und die 
+		Portrait-Archiv für Sie. Pünktlich zum Monatsanfang erhalten Sie Ihre detaillierte Provisionsabrechnung und die 
 		Überweisung der angefallenen Provisionen auf Ihr angegebenes Konto. <br/><br/>
 		
-		Weitere Details zu Portrait-Archiv.com finden Sie unter den nachfolgenden Links:
+		Weitere Details zu Portrait-Archiv finden Sie unter den nachfolgenden Links:
 		<ul>
-			<li><a href="http://www.portrait-service.com/portrait-archiv/funktionsweise/?REF=pawps" target="_blank">die Funktionsweise von Portrait-Archiv.com</a></li>
+			<li><a href="http://www.portrait-service.com/portrait-archiv/funktionsweise/?REF=pawps" target="_blank">die Funktionsweise von Portrait-Archiv</a></li>
 			<li><a href="http://www.portrait-service.com/portrait-archiv/hochste-qualitat-in-der-produktion-ihrer-kundenbestellungen/?REF=pawps" target="_blank">Laborpartner</a></li>
 			<li><a href="http://www.portrait-service.com/portrait-archiv/berechnen-sie-ihre-individuelle-umsatzsteigerung/?REF=pawps" target="_blank">Steigern Sie Ihren Umsatz durch Ihr Online-Portal</a></li>
 			<li><a href="http://www.portrait-service.com/portrait-archiv/unsere-antworten-auf-ihre-fragen/?REF=pawps" target="_blank">FAQ - Sie Fragen, wir Antworten</a></li>
@@ -559,7 +532,7 @@
 				
 		<br/>
 		<h3>Funktionsweise</h3>
-		<img src="http://www.portrait-service.com/wp-content/uploads/So-funktioniert%C2%B4s_dunkel-1024x669.jpg" />		
+		<img src="http://www.portrait-service.com/wp-content/uploads/2015/04/20150423_funktion_grafik_rund.png" />		
  	</div>
 	
 	<?php 
@@ -576,29 +549,28 @@
  		
  		<div class="wrap">
  			<h3>Systemeinrichtung</h3>
- 			Damit das Shopmodul auf Ihre Galerien bei Portrait-Archiv.com zugreifen ist es notwendig dass Sie die 
+ 			Damit das Shopmodul auf Ihre Galerien bei Portrait-Archiv zugreifen ist es notwendig dass Sie die 
  			Systemauthentfizierung durchführen. Führen Sie hierzu die folgenden Schritte durch:
  			<ol>
- 				<li>Navigieren Sie innerhalb Ihres Wordpress-Modules zum Menüpunkt 'Portrait-Archiv.com > Verbindungsdaten'
- 				und notieren Sie sich den Wert aus dem Feld 'Modul-Token'<br/>
- 				<img src="<?php echo plugins_url( 'portrait-archiv-shop/resources/docu/pawps_einrichten_1.png' ); ?>" alt="Modul-Token im WP-Adminbereich" class="pawps_image" /></li> 				
- 				<li>Loggen Sie sich mit Ihren Userdaten auf Portrait-Archiv.com ein. Klicken Sie auf dem Menüpunkt 
- 				'Wordpress-Modul' im Bereich 'Integration' innerhalb Ihres Benutzermenüs.</li>
- 				<li>Tragen Sie dort im Feld 'Token aus Modul' den im Punkt 1 notierten Token ein<br/>
+ 				<li>Navigieren Sie innerhalb Ihres Wordpress-Modules zum Menüpunkt 'Portrait-Archiv > Verbindungsdaten'. Wählen Sie
+ 				die Niederlassung aus, bei welcher Sie über einen Nutzeraccount verfügen und notieren Sie sich den Wert aus dem Feld 'Modul-Token'<br/>
+ 				<img src="<?php echo plugins_url( 'portrait-archiv-shop/resources/docu/pawps_einrichten_1.png' ); ?>" alt="Modul-Token im WP-Adminbereich" class="pawps_image" width="500px" /></li> 				
+ 				<li>Loggen Sie sich mit Ihren Userdaten auf Portrait-Archiv ein. Klicken Sie auf dem Menüpunkt 
+ 				'Wordpress-Konfiguration' im Bereich 'Galerieverwaltung' innerhalb Ihres Benutzermenüs.</li>
+ 				<li>Tragen Sie dort im Feld 'Modul Token' den im Punkt 1 notierten Token ein<br/>
  				<img src="<?php echo plugins_url( 'portrait-archiv-shop/resources/docu/pawps_einrichten_2.png' ); ?>" alt="Modul-Token im WP-Adminbereich" width="500px" class="pawps_image" /></li>
- 				<li>Klicken Sie nun auf den Button 'Portrait-Archiv.com Hash-Key generieren'<br/>
- 				<img src="<?php echo plugins_url( 'portrait-archiv-shop/resources/docu/pawps_einrichten_3.png' ); ?>" alt="Token auf Portrait-Archiv.com generieren" width="500px" class="pawps_image" /><br/>
+ 				<li>Klicken Sie nun auf den Button 'Konfiguration speichern' und wählen notieren Sie den generierten 'Portrait-Archiv Token'<br/>
  				</li>
- 				<li>Notieren Sie sich nun die User-ID sowie den generierten 'Portrait-Archiv.com Token' und übertragen 
+ 				<li>Notieren Sie sich nun die User-ID sowie den generierten 'Portrait-Archiv Token' und übertragen 
  				sie diese in die entsprechenden Felder in den 'Verbindungsdaten' Ihres Modules.<br/>
  				Speichern Sie die Änderungen durch einen Klick auf den Button 'Verbindungsdaten speichern'<br/>
- 				<img src="<?php echo plugins_url( 'portrait-archiv-shop/resources/docu/pawps_einrichten_4.png' ); ?>" alt="Modulkonfiguration abschliessen" width="500px" class="pawps_image" /><br/>
- 				Die Verbindung zwischen Portrait-Archiv.com und Ihrer Wordpress-Modulinstallation ist nun erfolgreich
+ 				<img src="<?php echo plugins_url( 'portrait-archiv-shop/resources/docu/pawps_einrichten_3.png' ); ?>" alt="Modulkonfiguration abschliessen" width="500px" class="pawps_image" /><br/>
+ 				Die Verbindung zwischen Portrait-Archiv und Ihrer Wordpress-Modulinstallation ist nun erfolgreich
  				hergestellt.</li> 
  			</ol>
  		
  	 		<h3>mögliche Template-Tags</h3>
- 	 		Mit Hilfe des Portrait-Archiv.com Shopmodules haben Sie die Möglichkeit sowohl eine Liste von Galerien  
+ 	 		Mit Hilfe des Portrait-Archiv Shopmodules haben Sie die Möglichkeit sowohl eine Liste von Galerien  
  	 		als auch einzelne Galerien in Ihre bestehenden Wordpress-Seiten einzubinden. Hierzu genügt es einen bestimmten Tag 
  	 		in Ihre Seite einzufügen. Das Modul ersetzt dieses Tag selbstständig gegen die entsprechenden Inhalte. <br/>
  	 		<br/>
@@ -634,7 +606,7 @@
  					<tr valign="top">
  						<td>[pawps_galeriecode]</td>
  						<td>
- 							Fügt den Dialog zur Eingabe des Portrait-Archiv.com Galeriecodes ein. Bei Aufruf der Seite mit dem eingefügten 
+ 							Fügt den Dialog zur Eingabe des Portrait-Archiv Galeriecodes ein. Bei Aufruf der Seite mit dem eingefügten 
  							Tag ist lediglich der Eingabedialog sichtbar. Nach Eingabe des entsprechenden Galeriecodes gelangt der Besucher 
  							zur jeweiligen Galerie. 
  						</td>
@@ -700,7 +672,7 @@
 	
 	?>
  		<div class="wrap">
- 			<h3>Portrait-Archiv.com Verbindungsdaten</h3>
+ 			<h3>Portrait-Archiv Verbindungsdaten</h3>
  			<?php pawps_displayError($error, $message); ?>
  			<form name="verbindungsDatenForm" method="post" action="">
 				<table class="wp-list-table widefat fixed pages" cellspacing="0">
@@ -712,7 +684,7 @@
 						<td>Portrait-Archiv Niederlassung:</td>
 						<td>
 							<select name="PA_NIEDERLASSUNG">
-								<option value="DE"<?php if ($paSystemCountry == 'DE') echo " selected"; ?>>Deutschland (Portrait-Archiv.com)</option>
+								<option value="DE"<?php if ($paSystemCountry == 'DE') echo " selected"; ?>>Deutschland (Portrait-Archiv)</option>
 								<option value="CH"<?php if ($paSystemCountry == 'CH') echo " selected"; ?>>Schweiz (Portrait-Archiv.ch)</option>
 							</select>
 						</td>
@@ -721,14 +693,14 @@
 						<td>Modul-Token:</td>
 						<td>
 							<input type="text" name="PA_HASHKEY" value="<?php echo $paHash; ?>" size="20" maxlength="20" readonly>
-							<div style="font-size:10px"><b>Hinweis:</b> Dieser Token muss von Ihnen auf Portrait-Archiv.com in Ihrer Wordpress-Konfiguration hinterlegt werden</div>
+							<div style="font-size:10px"><b>Hinweis:</b> Dieser Token muss von Ihnen auf Portrait-Archiv in Ihrer Wordpress-Konfiguration hinterlegt werden</div>
 						</td>
 					</tr>
 					<tr>
-						<td>Portrait-Archiv.com Token:</td>
+						<td>Portrait-Archiv Token:</td>
 						<td>
 							<input type="text" name="PA_HASHKEY_REMOTE" value="<?php echo $paHashRemote; ?>" size="20" maxlength="20" >
-							<div style="font-size:10px"><b>Hinweis:</b> Dieser Token wird Ihnen nach Eingabe des Modul-Tokes auf Portrait-Archiv.com bereitgestellt und muss hier hinterlegt werden</div>
+							<div style="font-size:10px"><b>Hinweis:</b> Dieser Token wird Ihnen nach Eingabe des Modul-Tokes auf Portrait-Archiv bereitgestellt und muss hier hinterlegt werden</div>
 						</td>
 					</tr>
 				</table>
@@ -760,7 +732,7 @@
 		
  	?>
  		<div class="wrap">
-			<h3>Portrait-Archiv.com Entwicklungseinstellung</h3>
+			<h3>Portrait-Archiv Entwicklungseinstellung</h3>
 			<?php pawps_displayError($error, $message); ?>
 			<form name="configDataForm" method="post" action="">
 				<table class="wp-list-table widefat fixed pages" cellspacing="0">
@@ -850,8 +822,8 @@
 			</table>
 			<u>Hinweis:</u><br/>
 			Bestellungen mit der Bestellnummer 'nicht ermittelbar' konnten im Bestellprozess nicht automatisiert 
-			übertragen werden. Stattdessen wurden diese per Mail an Portrait-Archiv.com übersendet und manuell 
-			im System erfasst. Die Bestellungen konnen online innerhalb Ihres Portrait-Archiv.com Accounts eingesehen werden.
+			übertragen werden. Stattdessen wurden diese per Mail an Portrait-Archiv übersendet und manuell 
+			im System erfasst. Die Bestellungen konnen online innerhalb Ihres Portrait-Archiv Accounts eingesehen werden.
 		</div>
 	 	<?php
 	}
@@ -1221,7 +1193,7 @@
 											echo "<td>";
 											echo $shooting->title;
 											echo "<br/>";
-											echo "<a href='https://www.portrait-archiv.com/?vCode=" . $shooting->accesscode . "' target='_blank'>" . $shooting->accesscode . "</a>"; 
+											echo "<a href='https://www.Portrait-Archiv/?vCode=" . $shooting->accesscode . "' target='_blank'>" . $shooting->accesscode . "</a>"; 
 											echo "</td>";
 											echo "<td>" . date('d.m.Y', strtotime($shooting->shootingdate)) . "</td>";
 											echo "<td>" . $shooting->imageCount . "</td>";
@@ -1283,12 +1255,12 @@
   	
   	?>
   		<div class="wrap">
-  			Damit das Portrait-Archiv.com Shopmodul vollständig funktioniert sind einige Voraussetzungen zu erfüllen. Bei der 
+  			Damit das Portrait-Archiv Shopmodul vollständig funktioniert sind einige Voraussetzungen zu erfüllen. Bei der 
   			Prüfung Ihres Systemes ist aufgefallen, dass nicht alle notwendigen Voraussetzungen erfüllt sind und das Modul somit 
   			nicht lauffähig ist. Bitte überprüfen Sie die folgenden Parameter:
   			
   			<h3>Verbindungseinstellungen</h3>
-  			Damit Ihre Internetseite eine Verbindung zu Portrait-Archiv.com herstellen kann ist es notwendig, dass eine der
+  			Damit Ihre Internetseite eine Verbindung zu Portrait-Archiv herstellen kann ist es notwendig, dass eine der
   			beiden folgenden Module aktiviert ist. Diese Aktivierung kann in der Regel nur durch Ihren Webhoster vorgenommen werden:
   			
   			<table class="wp-list-table widefat fixed pages" cellspacing="0">
