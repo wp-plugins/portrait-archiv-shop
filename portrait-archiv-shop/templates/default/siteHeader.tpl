@@ -9,13 +9,24 @@
 				}
 			?>
 		</td>
+		<td align="center">
+			<?php
+				if (isset($_SESSION['PAWPS_LOGIN'])) {
+					?>
+						<a href='<?php echo remove_query_arg(array( 'pawps_showWarenkorb', 'pawps_shooting', 'pDetails', 'pawps_ordner'), add_query_arg ('pawps_galerieReset', 1)); ?>' title='Galerie Logout'>Galerie Reset</a>
+					<?php
+				} else {
+					echo "&nbsp;";
+				}
+			?>
+		</td>
 		<td align="right">
 			<?php
 				if (isset($warenkorb) && ($warenkorb->getAnzahl() > 0)) {
 					?>
 					<table border="0">
 						<tr valign="top">
-							<td colspan="2"><a href='<?php echo add_query_arg ('pawps_showWarenkorb', 1); ?>' title='Warenkorb anzeigen'>Warenkorb</a><br/></td>
+							<td colspan="2"><a href='<?php echo remove_query_arg('pawps_galerieReset', add_query_arg ('pawps_showWarenkorb', 1)); ?>' title='Warenkorb anzeigen'>Warenkorb</a><br/></td>
 						</tr>
 						<tr>
 							<td>Artikel:</td>

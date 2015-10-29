@@ -53,14 +53,6 @@ Author URI: http://www.Portrait-Service.com/
  	
  	// Schedule deaktivieren
  	wp_clear_scheduled_hook('pawps_refresh_daily_hook');
- 	
- 	// Temporär alle Config-Werte entfernen
- 	delete_option(PAWPS_OPTION_HASHKEY);
- 	delete_option(PAWPS_OPTION_HASHKEY_REMOTE);
- 	delete_option(PAWPS_OPTION_USERID);
- 	delete_option(PAWPS_LAST_UPDATE_SHOOTINGS);
- 	delete_option(PAWPS_DB_VERSION);
- 	delete_option(PAWPS_DEBUG);
  }
  
   function pawps_insertContent() {

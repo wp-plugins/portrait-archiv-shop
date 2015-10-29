@@ -32,5 +32,4 @@
  // Standardwerte
  define ('PAWPS_USERTPL_START', 'eigeneVorlage-');
 
- define ('PAWPS_LOCAL_DEV', true);
 ?>

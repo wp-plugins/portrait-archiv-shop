@@ -1,5 +1,5 @@
 <div class="row">
-	<div class="col-xs-6 text-left">
+	<div class="col-xs-4 text-left">
 		<?php
 			if (isset($pageTitle)) {
 				echo "<h2>" . $pageTitle . "</h2>";
@@ -8,12 +8,23 @@
 			}
 		?>
 	</div>
-	<div class="col-xs-6 text-right">
+	<div class="col-xs-4 text-center">
+		<?php
+			if (isset($_SESSION['PAWPS_LOGIN'])) {
+				?>
+					<a href='<?php echo remove_query_arg(array( 'pawps_showWarenkorb', 'pawps_shooting', 'pDetails', 'pawps_ordner'), add_query_arg ('pawps_galerieReset', 1)); ?>' title='Galerie Logout'>Galerie Reset</a>
+				<?php
+			} else {
+				echo "&nbsp;";
+			}
+		?>
+	</div>
+	<div class="col-xs-4 text-right">
 			<?php
 				if (isset($warenkorb) && ($warenkorb->getAnzahl() > 0)) {
 					?>
 					<div class="row text-center">
-						<a href='<?php echo add_query_arg ('pawps_showWarenkorb', 1); ?>' title='Warenkorb anzeigen'><span class="glyphicon glyphicon-shopping-cart" aria-hidden="true"></span> Warenkorb</a>
+						<a href='<?php echo remove_query_arg('pawps_galerieReset', add_query_arg ('pawps_showWarenkorb', 1)); ?>' title='Warenkorb anzeigen'><span class="glyphicon glyphicon-shopping-cart" aria-hidden="true"></span> Warenkorb</a>
 					</div>
 					<div class="row">
 						<div class="col-xs-8">Artikel:</div>

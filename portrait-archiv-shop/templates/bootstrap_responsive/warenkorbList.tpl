@@ -1,17 +1,20 @@
 <?php if (!isset($displayOnly) || !$displayOnly) { ?>
 	<form name="warenkorbForm" method="post" action="<?php echo add_query_arg (array('removePosition'=> null, 'removePositionImage' => null)); ?>">
 <?php } ?>
-			<table>
-				<tr>
-					<td>&nbsp;</td>
-					<td>Artikel</td>
-					<td>Anzahl</td>
-					<td>Einzelpreis</td>
-					<td>Gesamtpreis</td>
-					<?php if (!isset($displayOnly) || !$displayOnly) { ?>
-						<td>&nbsp;</td>
-					<?php } ?>
-				</tr>
+			<table class="table table-striped">
+				<thead>
+					<tr>
+						<th>&nbsp;</th>
+						<th>Artikel</th>
+						<th>Anzahl</th>
+						<th>Einzelpreis</th>
+						<th>Gesamtpreis</th>
+						<?php if (!isset($displayOnly) || !$displayOnly) { ?>
+							<th>&nbsp;</th>
+						<?php } ?>
+					</tr>
+				</thead>
+				<tbody>
 	<?php 
 	
 	foreach ($warenkorb->positionen as $position) {
@@ -65,6 +68,7 @@
 						<td>&nbsp;</td>
 					<?php } ?>						
 				</tr>
+				</tbody>
 			</table>
 			
 			<?php if (!isset($displayOnly) || !$displayOnly) { ?>

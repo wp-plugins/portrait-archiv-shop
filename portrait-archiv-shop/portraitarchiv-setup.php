@@ -1,7 +1,7 @@
 <?php
 
  function pawps_setupDatabase() {
- 	$currentDatabaseVersion = 5;
+ 	$currentDatabaseVersion = 6;
  	
  	$updateDone = false;
  	
@@ -77,6 +77,7 @@
 				subDir VARCHAR(100) NOT NULL,
 				detailUrl VARCHAR(20) NOT NULL,
 				thumbUrl VARCHAR(20) NOT NULL,
+				baseUrl VARCHAR(150) NOT NULL,
 				PRIMARY KEY(ID));';	
 		dbDelta( $tableSql );
 		

@@ -246,14 +246,6 @@ function pawps_createOnlineOrder($warenkorb, $zahlungsweise) {
 }
 
 function pawps_getUrl($base = true) {
-	if (PAWPS_LOCAL_DEV) {
-		if ($base) {
-			return 'http://localhost:8080/Portrait-Archiv/'; 
-		} else {
-			return "https://images.portrait-archiv.com/";
-		}
-	}
-	
 	$chosenCountry = get_option(PAWPS_SYSTEMCOUNTRY);
 	if ($chosenCountry == "DE") {
 		if ($base) {

@@ -641,6 +641,12 @@
 		wp_die( __( 'Ihre aktuelle Berechtigung verhindert den Zugriff auf diese Seite' ) );
 	}
 
+	if (isset($_POST['resetGrundeinstellung'])) {
+		update_option(PAWPS_OPTION_HASHKEY, pawps_generateLocalHash());
+		update_option(PAWPS_OPTION_USERID, '');
+		update_option(PAWPS_OPTION_HASHKEY_REMOTE, '');
+	}
+	
 	// alte Werte aus Options laden
 	$paHash = get_option(PAWPS_OPTION_HASHKEY);
 	$paHashRemote = get_option(PAWPS_OPTION_HASHKEY_REMOTE);
@@ -706,6 +712,7 @@
 				</table>
 				<p class="submit">
 					<input type="submit" name="grundeinstellungSubmit" class="button-primary" value="Verbindungsdaten speichern" />
+					<input type="submit" name="resetGrundeinstellung" class="button-primary" value="aktuelle Konfiguration löschen" />
 				</p>
 			
 			</form>
@@ -1149,8 +1156,9 @@
 					}
 					
 					if (isset($lastLocaleUpdateString)) {
-						// Aktualisierung wurde bereits durchgefÃ¯Â¿Â½hrt
-						?> Die letzte Datenaktualisierung wurde am <?php echo $lastLocaleUpdateString; ?> durchgeführt. <?php 
+						// Aktualisierung wurde bereits durchgeführt
+						$remoteUpdateString = date('d.m.Y H:i:s', pawps_getRemoteLastUpdate());
+						?> Die letzten Datenaktualisierungen: Modul: <?php echo $lastLocaleUpdateString; ?>, Online: <?php echo $remoteUpdateString; ?>.<br/><?php 
 					} else {
 						// noch keine Aktualisierung durchgefÃƒÂ¼hrt
 						?> Ihre Daten wurden bisher noch nicht aktualisiert / geladen. Bitte füren Sie eine manuelle Datenaktualisierung durch. <?php

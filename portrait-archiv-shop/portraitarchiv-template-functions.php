@@ -90,6 +90,9 @@
  }
  
  function pawps_shootingByCode() {
+ 	if (isset($_GET['pawps_galerieReset']) && ($_GET['pawps_galerieReset'] == 1)) {
+ 		unset($_SESSION['PAWPS_LOGIN']);
+ 	}
  	if (!isset($_SESSION['PAWPS_LOGIN'])) {
  		$passwordCheckDone = false;
  		if (isset($_POST['PA_GUESTPASSWORD']) && (strlen($_POST['PA_GUESTPASSWORD']) > 0)) {

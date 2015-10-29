@@ -309,6 +309,7 @@
  		$this->thumbUrl = $values->thumbUrl;
  		$this->subDir = $values->subDir;
  		$this->ordnerId = $values->ordnerId;
+ 		$this->baseUrl = $values->baseUrl;
  	}
  	
  	function isFirst() {
@@ -352,11 +353,11 @@
  	}
  	
  	function getThumbUrl() {
- 		return urldecode(pawps_getUrl(false) . $this->onlineVeranstaltungId . "/" . $this->subDir . "/" . $this->thumbUrl);
+ 		return urldecode($this->baseUrl . "/" . $this->thumbUrl);
  	}
  	
  	function getDetailUrl() {
- 		return urldecode(pawps_getUrl(false) . $this->onlineVeranstaltungId ."/" . $this->subDir . "/" . $this->detailUrl);
+ 		return urldecode($this->baseUrl . "/" . $this->detailUrl);
  	}
  }
  

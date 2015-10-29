@@ -49,9 +49,6 @@
 		 							));
 		 					
 		 					$shootingId = $existierendesShooting->id;
-		 						
-		 					// Images löschen 
-		 					$wpdb->query('DELETE FROM ' . PAWPS_TABLENAME_IMAGES . " WHERE veranstaltungsid=" . $shootingId);
 		 				} else {		 						
 		 					// Shooting existiert noch nicht -> Eintrag in DB vornehmen
 		 					$wpdb->insert(
@@ -68,6 +65,9 @@
 		 					$shootingId = $wpdb->insert_id; 
 		 				}
 		 					
+		 				// Images löschen
+		 				$wpdb->query('DELETE FROM ' . PAWPS_TABLENAME_IMAGES . " WHERE veranstaltungsid=" . $shootingId);
+		 				
 		 				// Lade Shooting erneut
 		 				$existierendesShooting = pawps_loadShootingByData($shootingId);
 		 				pawps_refreshPricelist($existierendesShooting->pricelist_id, $lastRemoteUpdate);
@@ -280,7 +280,8 @@
  						'ordnerId' => pawps_getOrdnerId($technicalId, urldecode($jsonImg->subDir)),
  						'subDir' => $jsonImg->subDir,
  						'detailUrl' => $jsonImg->detailUrl,
- 						'thumbUrl' => $jsonImg->thumbUrl
+ 						'thumbUrl' => $jsonImg->thumbUrl,
+ 						'baseUrl' => $jsonImg->baseUrl
  				));
  	}
  	
